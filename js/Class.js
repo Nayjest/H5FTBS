@@ -1,3 +1,6 @@
+/**
+* 
+*/
 function merge(target, src){
 	for (var i in src) {
 		src.hasOwnProperty(i) && (target[i] = src[i]);
@@ -5,6 +8,9 @@ function merge(target, src){
 	return target;
 }
 
+/**
+*  Add properties of src object to target object if target object don't have a properties with same names
+*/
 function mergeUndefined(target, src){
 
 	for (var i in src) {
@@ -44,6 +50,9 @@ function mergeUndefined(target, src){
 
 })();
 
+/**
+* @attribute config string
+*/
 construct = function(config) {
     var _class = config._class;    
     if (typeof _class == 'string') {

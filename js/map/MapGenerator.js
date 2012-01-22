@@ -30,7 +30,7 @@
                     construct(conf).placeTo(map, x,y);
                 }   
             }
-            return map;
+            return this;
         }
 
     }

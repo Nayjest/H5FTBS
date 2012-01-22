@@ -1,37 +1,64 @@
 (function(){
 
+    // Terrain levels for drawing order
+    var zLevels = {
+        back:[0], 
+        water:[1,4],
+        ground:[5,8],
+        mapCellHighlight:9,
+        mountains:[10,19],
+        groundDecorations:[20,29],
+        trees:[30,39],
+        buildings:[40,49],
+        objects:[50,59],
+        units:[60,69],
+        effects:[70,79],
+        gui:[100]        
+    }
 
-
+    // default values for map
     var defaults = {
-        size:[10,10],
-        cellSize:[74,64],
-        selectedCellHoverLayer:{
+        size:[10,10], //size in cells
+        cellSize:[74,64], // cell sizein pixels
+        selectedCellHoverLayer:{ // config of layer that is drawed when 
             tag:'img',
             attr:{
+                'class':'noselect',
                 src:'/img/cursor/gex.png'
             },
-            css:{
-                zIndex:9999999,
-                display:'none'
+            css:{                
+                display:'none',
+                zIndex:zLevels.mapCellHighlight
             }
         },
-        $infoPanel:'#sidebar',        
+        $infoPanel:'#mapInfo', // jquery object that represents dom element of info panel
+        objects:[], // configuration or instances of map objects
+        units:[],        
     }
 
     Map = function(config){
-        mergeUndefined(config, defaults);        
-        this.size = config.size;
-        this.cellSize = config.cellSize;        
+        var options = merge({},config);
+        mergeUndefined(options, defaults);        
+        this.size = options.size;
+        this.cellSize = options.cellSize;        
         this._createLayer();
         this._clearCells();
+        this.objects = options.objects;
         
+        for (var i in options.objects) {
+            if (!(options.objects[i] instanceof MapObject)) options.objects[i] = construct(options.objects[i]);
+            options.objects[i].placeTo(this,options.objects[i].x,options.objects[i].y);
+        }
+        
+        this.units = options.units;
+
         //MapCell selected at current moment 
         this.selectedCell = null,        
-        
-        this.selectedCellHoverLayer = new DomLayer(config.selectedCellHoverLayer);
+
+        this.selectedCellHoverLayer = new DomLayer(options.selectedCellHoverLayer);
         this.selectedCellHoverLayer.setSize(this.cellSize).setParent(this.layer);
-        this.$infoPanel = $(config.$infoPanel);
-        
+        this.$infoPanel = $(options.$infoPanel);
+
     }
     Map.prototype = {
         _createLayer:function(){
@@ -53,9 +80,18 @@
 
         },
         selectCell:function(cell){
-           this.selectedCellHoverLayer.setOffset(cell.layer.offset).show();
-           this.$infoPanel.html(cell.getInfo());
+            if (cell) {
+                this.selectedCellHoverLayer.show().setOffset(cell.layer.offset);
+                this.$infoPanel.html('<b>Территория:</b>'+cell.getInfo());
+            }else{
+                this.$infoPanel.html('');
+                this.selectedCellHoverLayer.hide();                
+            }
+            return this;
         }
     }
+    
+    Map.zLevels = zLevels;
+    
 
 })();

@@ -9,7 +9,8 @@
         mergeUndefined(options, defaults);        
         Unit.superClass.call(this,options);        
         this.setPlayer(options.player);
-    }.inheritsFrom('MapObject').extendProto({
+    }
+    Unit.inheritsFrom('MapObject').extendProto({
         select:function(player){            
             Unit.superProto.select.call(this);
             this.map.game.selectedUnit == this;            
@@ -22,7 +23,8 @@
         },
         moveTo:function(cell){
             this.mapCell = cell;
-            this.layer.setOffset(cell.layer.offset);
+            this.map.game.animationManager.move(this.layer,cell.layer.offset,1);
+            //this.layer.setOffset(cell.layer.offset);
         },
         /**
         * @param Player player

@@ -14,7 +14,8 @@
         this.moves = config.moves;
         
         this._guiLayers = [];
-    }.inheritsFrom('Unit').extendProto({
+    }
+    TbsUnit.inheritsFrom('Unit').extendProto({
         onNewTurn:function(){
             this.moves = this.maxMoves;
             

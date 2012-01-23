@@ -1,5 +1,6 @@
 (function() {
 
+    // radians in one degree
     var radInDeg = Math.PI / 180;
 
     DOMLayer = function (config) {
@@ -22,7 +23,7 @@
         }
         this.update();
     }.inheritsFrom(AbstractLayer).extendProto({
-
+        
         calcDOMOffset:function() {
 
             var parentOffset = this.$parentEl.offset();
@@ -65,7 +66,7 @@
         hide:function(){
             this.$el.hide();
             return this;
-        },
+        },        
         update:function() {
             //update angle
             var val = 'rotate(' + this.angle + 'deg)';

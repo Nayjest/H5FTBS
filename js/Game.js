@@ -8,6 +8,7 @@
         mergeUndefined(config, defaults);
         
         this.map = config.map instanceof Map? config.map : Map.load(config.map);
+        this.animationManager = new AnimationManager();
         map.game = this;
         this.players = [];
         if (config.players) {            

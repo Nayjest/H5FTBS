@@ -49,7 +49,7 @@
             }
         },
         setOffset:function(offset){
-            this.offset = offset;
+            this.offset = [offset[0],offset[1]];
             this.$el.offset(this.calcDOMOffset());
             return this;
         },

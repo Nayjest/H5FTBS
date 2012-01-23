@@ -12,7 +12,8 @@
         this.turn = 0;
         TurnBasedGame.superClass.call(this,config);                   
         
-    }.inheritsFrom('Game').extendProto({
+    }
+    TurnBasedGame.inheritsFrom('Game').extendProto({
         addPlayer:function(player){
             TurnBasedGame.superProto.addPlayer.call(this,player);
             if (!this.currentPlayer) {

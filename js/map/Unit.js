@@ -21,10 +21,10 @@
         showActions:function(){
             
         },
-        moveTo:function(cell){
+        moveTo:function(cell){            
             this.mapCell = cell;
             this.map.game.animationManager.move(this.layer,cell.layer.offset,1);
-            //this.layer.setOffset(cell.layer.offset);
+            //this.layer.setOffset(cell.layer.offset);            
         },
         /**
         * @param Player player

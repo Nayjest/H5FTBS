@@ -32,7 +32,7 @@
         },
         moveTo:function(cell){
                         
-            this.moves-=this.mapCell.distanceTo(cell);            
+            this.moves -= this.mapCell.distanceTo(cell);            
             TbsUnit.superProto.moveTo.call(this,cell);
             if (this.map.game.currentPlayer = this.player) {
                 this.showActions();    

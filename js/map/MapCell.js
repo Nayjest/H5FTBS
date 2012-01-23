@@ -51,7 +51,7 @@
             map.cells[x][y]=this;    
             return this;    
         },
-        nearby:function(){
+        nearby:function(){            
             var self = this;
             var near = [];
             function add(dx,dy) {
@@ -99,23 +99,29 @@
             } while(added);
         },
 
-        selectByDistance:function(distance,selected){            
+        /**
+        * @argument int distance
+        * @argument [MapCell] selected
+        * @return list of map cells that can be reached in <distance> steps
+        */
+        selectByDistance:function(distance, selected){            
             if (!selected) selected = [];
-            if (distance==0) return selected;
+            if (distance == 0) return selected;
 
             function notSelected(mapCell){
                 for (var i in selected) {
-                    if (selected[i]==mapCell) return false;
+                    if (selected[i] == mapCell) return false;
                 }
                 return true;
             }
             var nearCells = this.nearby();
             for (var i in nearCells) {
                 if (notSelected(nearCells[i])){
-                    selected.push(nearCells[i]);
-                    nearCells[i].selectByDistance(distance-1,selected);
+                    selected.push(nearCells[i]);                    
                 }
-
+            }
+            for (var i in nearCells) {
+                nearCells[i].selectByDistance(distance - 1, selected);
             }
             return selected;
 

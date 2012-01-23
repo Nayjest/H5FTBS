@@ -56,6 +56,7 @@ $(document).ready(function(){
     }).placeTo(map,4,1);
     
     unit3 = new TbsUnit({
+        moves:3,
         player: game.players[1],
         layer:{
             size:[52,80],

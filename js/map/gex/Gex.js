@@ -3,7 +3,8 @@
 
     Gex = function(config){
         Gex.superClass.apply(this,arguments);
-    }.inheritsFrom('MapCell').extendProto({
+    }
+    Gex.inheritsFrom('MapCell').extendProto({
         
         _setupLayerOffset:function(){
             var x = this.x;
@@ -14,11 +15,16 @@
                 (y*0.991-map.size[1]/2 + ((x % 2 == 0) ? 0.5 : 0))*map.cellSize[1]
             ]);
         },
-         nearby:function(){
+        
+        /**
+        *  @todo rename to getNeighboringCells
+        *  @return array of neighboring cells
+        */
+        nearby:function(){
             var self = this;
             var near = [];
             function add(dx,dy) {
-                var x =self.x+dx;
+                var x = self.x+dx;
                 var y = self.y+dy;
                 if (self.map.cells[x] && self.map.cells[x][y] instanceof MapCell) {
                     near.push(self.map.cells[x][y]);

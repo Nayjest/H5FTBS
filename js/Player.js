@@ -13,7 +13,8 @@
     }
         
 
-    Player.prototype = {        
+    Player.prototype = {                       
+        
         getMarker:function(){
             var cellSize = this.game.map.cellSize;
             console.log('cs',cellSize);
@@ -34,6 +35,12 @@
             this.getMarker().setParent(unit.layer).update();
         },
         /**
+        * @return true if player is enemy
+        */
+        isEnemy:function(player) {
+            return  !(this.team == player.team);
+        },
+        /**
         * @param Game 
         */
         connectToGame:function(game){
@@ -46,6 +53,7 @@
             if (!this.color) {
                 this.color = Player.colors[this.id-1];
             }
+            // To detect that player is enemy you must compare player teams                        
             if (!this.team) {
                 this.team = this.id;
             }

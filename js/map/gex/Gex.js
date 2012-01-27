@@ -40,6 +40,29 @@
             
             return near;           
         },
+        
+        createHighlightLayer:function(modification){
+            if (modification) {
+                modification = '_' + modification;
+            } else {
+                modification = '';
+            }
+            return new DomLayer({
+                    tag:'img',
+                    
+                    attr:{
+                        'class':'noselect',
+                        src:'/img/cursor/gex'+modification+'.png'
+                    },
+                    offset:this.layer.offset,
+                    size:this.map.cellSize,
+                    css:{
+                        zIndex:Map.zLevels.mapCellHighlight+1,
+                        position:'absolute',
+                    },
+                    parent:this.map.layer,
+            }).update();            
+        }
 
     });   
 

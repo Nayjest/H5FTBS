@@ -5,6 +5,7 @@
         moves:2,
         maxHp:10,
         hp:10,        
+        // quantity of hp that regenerates at each turn
         regenerationSpeed:1,
     }
 
@@ -63,30 +64,19 @@
             var l;
             for (var i in selected) {
                 var cell = selected[i];
-                l = new DomLayer({
-                    tag:'img',
-                    
-                    attr:{
-                        'class':'noselect',
-                        src:'/img/cursor/gex_green.png'
-                    },
-                    offset:cell.layer.offset,
-                    size:this.map.cellSize,
-                    css:{
-                        zIndex:Map.zLevels.mapCellHighlight+1,
-                        position:'absolute',
-                    },
-                    parent:this.map.layer,
-                }).update();
+                var unit;
+                if (unit = this.map.getUnitAt(cell.x, cell.y)) {                    
+                    if (this.player.isEnemy(unit.player)) {
+                        l = cell.createHighlightLayer('red');  
+                    }  
+                }else{
+                    l = cell.createHighlightLayer('green');  
+                    (function(cell){  
+                        l.$el.bind('click',function(){self.moveTo(cell);});  
+                    })(cell);
+                }                                
                 (function(cell){
-                l.$el.bind({
-                    click:function(){                        
-                        self.moveTo(cell);                                        
-                    },
-                    mouseover:function(){
-                        cell.select();                                            
-                    }
-                });
+                    l.$el.bind('mouseover',function(){cell.select();});
                 })(cell);
                 TbsUnit._movementHighlightLayers.push(l);
             }

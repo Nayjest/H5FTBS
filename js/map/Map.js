@@ -88,6 +88,17 @@
                 this.selectedCellHoverLayer.hide();                
             }
             return this;
+        },
+        
+        /**
+        * @return Unit | null
+        */
+        getUnitAt:function(x,y){
+            var cell;
+            for (var i in this.units) {                
+                cell = this.units[i].mapCell;        
+                if (cell && (cell.x == x) && (cell.y == y)) return this.units[i];
+            }
         }
     }
     

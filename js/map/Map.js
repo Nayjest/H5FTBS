@@ -1,4 +1,4 @@
-(function(){
+define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'],function(MapObject, DomLayer, $){
 
     // Terrain levels for drawing order
     var zLevels = {
@@ -104,5 +104,6 @@
     
     Map.zLevels = zLevels;
     
+    return Map;
 
-})();
+});

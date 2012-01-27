@@ -1,4 +1,4 @@
-(function(){
+define(['Game','Class'],function(Game){
 
     var defaults = {
         $currentPlayer:'#playerInfo',        
@@ -75,6 +75,8 @@
             }
               
         }
-    });    
+    });  
+    
+    return TurnBasedGame;  
 
-})();
+});

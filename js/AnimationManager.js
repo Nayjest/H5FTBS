@@ -1,7 +1,7 @@
 /**
 * Animation Manager class
 */
-(function(){
+define(['Class'], function(){
     
     var defaults = {
         delay: 1,   
@@ -44,4 +44,5 @@
        }
     }
 
-})();
+    return AnimationManager;
+});

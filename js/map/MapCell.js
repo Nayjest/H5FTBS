@@ -1,5 +1,4 @@
-(function(){
-
+define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(DomLayer,Highlight,$){
 
     var mapCellTypes = {
         road:0,
@@ -18,7 +17,6 @@
         ice:8,
         lava:9,
         wall:10,
-
     }
 
     var defaults = {
@@ -168,5 +166,5 @@
         }
     }
 
-
-})();
+    return MapCell;
+});

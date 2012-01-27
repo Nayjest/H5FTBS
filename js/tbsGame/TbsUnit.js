@@ -1,4 +1,4 @@
-(function(){
+define(['map/Unit'], function(Unit){
 
     var defaults = {        
         maxMoves:2,
@@ -85,5 +85,7 @@
         }
     });    
     TbsUnit._movementHighlightLayers = [];
+    
+    return TbsUnit;
 
-})();
+});

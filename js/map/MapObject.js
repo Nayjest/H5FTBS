@@ -1,11 +1,14 @@
-(function(){
+/**
+* MapObject class
+*/
+define(['layers/DomLayer'], function(DomLayer){
 
     var defaults = {
         layer:{},
         description: 'No info',
     }
 
-    MapObject = function(config){
+    var MapObject = function(config){
         var self = this;
         if (config) merge(this,config);
         mergeUndefined(this,defaults);
@@ -38,5 +41,7 @@
         }
 
     }
+    
+    return MapObject;
 
-})();
+});

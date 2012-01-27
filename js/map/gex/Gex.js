@@ -1,10 +1,9 @@
-(function(){
-
+define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils'], function(MapCell, Map, DomLayer, Utils){
 
     Gex = function(config){
         Gex.superClass.apply(this,arguments);
     }
-    Gex.inheritsFrom('MapCell').extendProto({
+    Gex.inheritsFrom(MapCell).extendProto({
         
         _setupLayerOffset:function(){
             var x = this.x;
@@ -78,13 +77,13 @@
                         'class':'noselect'
                     },
                     css: {
-                        backgroundImage:'url(/img/terrain/grass1/grass1_r'+rndInt(1,6)+'.png)',
+                        backgroundImage:'url(/img/terrain/grass1/grass1_r' + Utils.rndInt(1,6) + '.png)',
                         backgroundSize:'cover',
                         '-webkit-background-size':'cover',
                         backgroundPosition:'center',
 
                         position:'absolute',
-                        zIndex:rndInt(Map.zLevels.ground),
+                        zIndex: Utils.rndInt(Map.zLevels.ground),
                     },
                     size:[105,105]
                 }
@@ -111,5 +110,6 @@
         }
     }
 
+    return Gex;
 
-})();    
+});    

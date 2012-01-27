@@ -1,4 +1,4 @@
-(function(){
+define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
 
 
     Player = function(config){        
@@ -66,5 +66,7 @@
         local:{type:'local'},
         remote:{type:'remote'},
     }    
+    
+    return Player;
 
-})();
+});

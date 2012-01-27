@@ -3,17 +3,34 @@
     <head>
         <title>Canvas test</title>		
         <link rel="stylesheet" type="text/css" href="/css/main.css">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+        <?php // <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> ?>
         <!--[if IE]>
-        <script type="text/javascript" src="js/lib/excanvas.compiled.js"></script>
+        <script type="text/javascript" src="js/lib/excanvas/excanvas.compiled.js"></script>
         <![endif]-->
+        <script>
+        //configure loader
+        var require = {
+            baseUrl:'/js',            
+            paths:{
+                'jquery':'lib/jquery/jquery-1.7.1.min',
+            },
+            //only for dev mode
+            urlArgs: "bust=" +  (new Date()).getTime(),
+        }
+        </script>
+        <script src="/js/lib/requirejs/require.js"></script>
+        <script>
+            require(['bootstrap']);
+        </script>
+        <?/*
         <script src="/js/Class.js"></script>
         <script src="/js/Node.js"></script> 
         <script src="/js/layers/AbstractLayer.js"></script>
         <script src="/js/layers/DomLayer.js"></script>                
+        
         <script src="/js/layers/components/Tool.js"></script>
         <script src="/js/layers/components/Highlight.js"></script>
-
+        
         <script src="/js/map/MapCell.js"></script>                                
         <script src="/js/map/Map.js"></script>
         <script src="/js/map/MapGenerator.js"></script>                                
@@ -28,6 +45,7 @@
         <script src="/js/Player.js"></script>                                
 
         <script src="/js/bootstrap.js"></script>    
+        */?>
         <style>
             div{
                 padding:0;

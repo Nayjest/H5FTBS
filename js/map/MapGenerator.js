@@ -1,4 +1,4 @@
-(function(){
+define(['map/Map'], function(Map){
 
     /**
     * @param Map|mapConfig|null map
@@ -37,5 +37,7 @@
     MapGenerator.create=function(mapOrConfig){
         return new MapGenerator(mapOrConfig);
     }
+    
+    return MapGenerator;
 
-})();
+});

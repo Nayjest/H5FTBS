@@ -1,4 +1,7 @@
-(function() {
+/**
+*  module
+*/
+define(['layers/AbstractLayer'], function(Node) {
 
     // radians in one degree
     var radInDeg = Math.PI / 180;
@@ -23,7 +26,7 @@
         }
         this.update();
     }.inheritsFrom(AbstractLayer).extendProto({
-        
+
         calcDOMOffset:function() {
 
             var parentOffset = this.$parentEl.offset();
@@ -32,8 +35,8 @@
             var h = this.size[1] * zoom;
 
             var innerTopRightPos = [
-                (this.$parentEl.width() - w) / 2,
-                (this.$parentEl.height() - h) / 2
+            (this.$parentEl.width() - w) / 2,
+            (this.$parentEl.height() - h) / 2
             ];
 
             if (this.angle) {
@@ -80,9 +83,9 @@
             //update position and size
             var zoom = this.getZoom();
             this.$el
-                .offset(this.calcDOMOffset())
-                .width(this.size[0] * zoom)
-                .height(this.size[1] * zoom);
+            .offset(this.calcDOMOffset())
+            .width(this.size[0] * zoom)
+            .height(this.size[1] * zoom);
             return DOMLayer.superProto.update.call(this);
 
         },
@@ -104,5 +107,6 @@
     //alias
     DomLayer = DOMLayer;
 
+    return DomLayer;
 
-})();
+});

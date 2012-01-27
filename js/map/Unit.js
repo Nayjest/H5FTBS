@@ -1,4 +1,4 @@
-(function(){
+define(['map/MapObject'], function(MapObject){
 
     var defaults = {        
         player:null,
@@ -10,7 +10,7 @@
         Unit.superClass.call(this,options);        
         this.setPlayer(options.player);
     }
-    Unit.inheritsFrom('MapObject').extendProto({
+    Unit.inheritsFrom(MapObject).extendProto({
         select:function(player){            
             Unit.superProto.select.call(this);
             this.map.game.selectedUnit == this;            
@@ -47,5 +47,7 @@
 
 
     });    
+    
+    return Unit;
 
-})();
+});

@@ -1,4 +1,7 @@
-(function(){
+/**
+*  module
+*/
+define(['jquery', 'Class'], function($) {
 
 	var defaults = {
 		content:'<div>this is tool contents</div>',
@@ -21,7 +24,7 @@
 	* Behavior attached only to instances of DOMLayer
 	*
 	*/
-	Tool = function (owner,config) {
+	Tool = function (owner, config) {
 		this.owner = owner;
 		if (config) merge(this,config);		
 		mergeUndefined(this,defaults);
@@ -52,12 +55,21 @@
 		}
 
 	};
-	merge(Tool,{
-		hideAll:function() {
+    
+	merge(Tool, {
+		/**
+        * Hides all tools
+        */
+        hideAll:function() {
 			for (var i in Tool.instances) {
 				Tool.instances[i].hide();
 			}
 		},
-		instances:[]
+		/**
+        * array of tool instances
+        */
+        instances:[]
 	});	
-})();
+    
+    return Tool;
+});

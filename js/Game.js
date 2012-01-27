@@ -1,4 +1,4 @@
-(function(){
+define(['map/Map','AnimationManager', 'Class'],function(Map, AnimationManager, Class){
     
     var defaults = {    
         map:null
@@ -25,5 +25,7 @@
         }
         
     }
+    
+    return Game;
 
-})();
+});

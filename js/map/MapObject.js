@@ -1,7 +1,7 @@
 /**
 * MapObject class
 */
-define(['layers/DomLayer'], function(DomLayer){
+define(['layers/DomLayer', 'Loadable'], function(DomLayer){
 
     var defaults = {
         layer:{},

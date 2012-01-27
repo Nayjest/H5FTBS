@@ -1,15 +1,15 @@
 /**
-*  module
+*  module DomLayer
 */
-define(['layers/AbstractLayer'], function(Node) {
+define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], function(AbstractLayer, JqueryEventsMixin, $) {
 
     // radians in one degree
     var radInDeg = Math.PI / 180;
 
-    DOMLayer = function (config) {
+    DomLayer = function (config) {
         this.tag = config.tag || 'div';
         this.$el = $('<' + this.tag + '/>');
-        DOMLayer.superClass.call(this, config);
+        DomLayer.superClass.call(this, config);
         mergeUndefined(this, {
             css: { border: '1px dotted gray' },
             attr: {},
@@ -25,7 +25,8 @@ define(['layers/AbstractLayer'], function(Node) {
             this.$el.appendTo(this.$parentEl);
         }
         this.update();
-    }.inheritsFrom(AbstractLayer).extendProto({
+    }
+    DomLayer.inheritsFrom(AbstractLayer).extendProto(JqueryEventsMixin, {
 
         calcDOMOffset:function() {
 
@@ -86,11 +87,11 @@ define(['layers/AbstractLayer'], function(Node) {
             .offset(this.calcDOMOffset())
             .width(this.size[0] * zoom)
             .height(this.size[1] * zoom);
-            return DOMLayer.superProto.update.call(this);
+            return DomLayer.superProto.update.call(this);
 
         },
         setParent:function(parent) {
-            DOMLayer.superProto.setParent.call(this, parent);
+            DomLayer.superProto.setParent.call(this, parent);
             if (parent instanceof DOMLayer) {
                 this.$parentEl = parent.$el;
                 this.$el.appendTo(this.$parentEl);
@@ -100,13 +101,12 @@ define(['layers/AbstractLayer'], function(Node) {
         },
         destroy:function() {
             this.$el.detach();
-            DOMLayer.superProto.destroy.call(this);
+            DomLayer.superProto.destroy.call(this);
         }
 
-    });
-    //alias
-    DomLayer = DOMLayer;
-
-    return DomLayer;
+    });        
+    
+    
+    return DOMLayer = DomLayer;
 
 });

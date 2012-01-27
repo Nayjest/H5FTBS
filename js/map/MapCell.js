@@ -31,7 +31,7 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(Do
         (this.layer instanceof DomLayer) || (this.layer = new DomLayer(this.layer));     
         this.layer.highlight = new Highlight(this.layer,{});
 
-        this.layer.$el.bind('mouseover',function(e){
+        this.layer.on('mouseover',function(e){
             self.map.selectCell(self);            
         });   
     }   

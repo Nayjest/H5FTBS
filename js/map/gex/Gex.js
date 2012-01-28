@@ -1,4 +1,4 @@
-define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils'], function(MapCell, Map, DomLayer, Utils){
+define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils', 'Mouse'], function(MapCell, Map, DomLayer, Utils, Mouse){
 
     Gex = function(config){
         Gex.superClass.apply(this,arguments);
@@ -33,11 +33,39 @@ define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils'], function(MapCell, 
             add(-1,0);
             add(0,1);
             add(0,-1); 
-            
-            add(1,(this.x % 2 == 0)?1:-1);
-            add(-1,(this.x % 2 == 0)?1:-1);
+            var y = (this.x % 2)?-1:1;
+            add( 1, y);
+            add(-1, y);
             
             return near;           
+        },
+        topNeighbor:function(){
+            var cell;
+            if (cell = this.map.cells[this.x][this.y-1]) return cell;
+        },
+        bottomNeighbor:function(){
+            var cell;
+            if (cell = this.map.cells[this.x][this.y+1]) return cell;
+        },
+        topRightNeighbor:function(){
+            var cell, y;
+            y = this.y - this.x % 2;
+            if (cell = this.map.cells[this.x+1][y]) return cell; 
+        },
+        topLeftNeighbor:function(){
+            var cell, y;
+            y = this.y - this.x % 2;
+            if (cell = this.map.cells[this.x-1][y]) return cell; 
+        },
+        bottomRightNeighbor:function(){
+            var cell, y;
+            y = this.y + 1 - this.x % 2;
+            if (cell = this.map.cells[this.x+1][y]) return cell; 
+        },
+        bottomLeftNeighbor:function(){
+            var cell, y;
+            y = this.y + 1 - this.x % 2;
+            if (cell = this.map.cells[this.x-1][y]) return cell; 
         },
         
         createHighlightLayer:function(modification){
@@ -59,8 +87,23 @@ define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils'], function(MapCell, 
                         zIndex:Map.zLevels.mapCellHighlight+1,
                         position:'absolute',
                     },
-                    parent:this.map.layer,
+                    parent:this.map.layer,                    
             }).update();            
+        },
+        
+        getClosestNeighborByCursor:function(filter)
+        {
+            //console.log(Mouse.pos, this.layer.$el.offset());
+            var candidates = filter ? Utils.arrayIntersect(this.nearby(), filter) : this.nearby();
+            var res = candidates.map(function(cell){                
+                return {
+                    cell:cell,
+                    dist:Utils.distance(Mouse.pos, cell.layer.getCenterScreenPos())
+                }
+            }).sort(function(a,b){
+                return b.dist - a.dist;
+            }).pop();
+            if (res) return res.cell;            
         }
 
     });   
@@ -72,21 +115,7 @@ define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils'], function(MapCell, 
             return {
                 _class:'Gex',
                 type: MapCell.types.plane,
-                layer: {                    
-                    attr: {                        
-                        'class':'noselect'
-                    },
-                    css: {
-                        backgroundImage:'url(/img/terrain/grass1/grass1_r' + Utils.rndInt(1,6) + '.png)',
-                        backgroundSize:'cover',
-                        '-webkit-background-size':'cover',
-                        backgroundPosition:'center',
-
-                        position:'absolute',
-                        zIndex: Utils.rndInt(Map.zLevels.ground),
-                    },
-                    size:[105,105]
-                }
+                layer:'map/cell/gex/grass/layer',               
             }; 
         },
         test:function()

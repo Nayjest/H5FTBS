@@ -1,20 +1,32 @@
 define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
 
 
+
     Player = function(config){        
-        merge(this,config); 
-        this.units = [];       
+        var defaults = {
+            controller:Player.controllers.local,
+            killedUnits:[],        
+            casualties:[],
+            units:[]
+        }
+        merge(this,config);
+        mergeUndefined(this,defaults);         
         if (this.game) {
             this.connectToGame(this.game);
-        }
-        if (!this.controller) {
-            this.controller = Player.controllers.local;
-        }
+        }        
     }
-        
+
+
+    Player.colors = ['red','blue','green','orange','yellow','pink','gray'];
+    Player.controllers = {
+        local:{type:'local'},
+        remote:{type:'remote'},
+    }    
+
+
 
     Player.prototype = {                       
-        
+
         getMarker:function(){
             var cellSize = this.game.map.cellSize;
             console.log('cs',cellSize);
@@ -26,12 +38,13 @@ define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
                     backgroundColor:this.color,
                     zIndex:Map.zLevels.gui,                    
                     position:'absolute',
-                    
+
                 }
             }
             return new DomLayer(layerConfig);
         },
         markUnit:function(unit){            
+            //@todo probably unit.layer dont loaded yet
             this.getMarker().setParent(unit.layer).update();
         },
         /**
@@ -57,16 +70,10 @@ define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
             if (!this.team) {
                 this.team = this.id;
             }
-            game.addPlayer(this);            
+            if (game.players.indexOf(this)==-1) game.players.push(this);            
         }        
     }
 
-    Player.colors = ['red','blue','green','orange','yellow','pink','gray'];
-    Player.controllers = {
-        local:{type:'local'},
-        remote:{type:'remote'},
-    }    
-    
     return Player;
 
 });

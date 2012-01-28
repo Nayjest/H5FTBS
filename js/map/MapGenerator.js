@@ -27,7 +27,8 @@ define(['map/Map'], function(Map){
                 map.cells[x] = [];
                 for (var y=0; y<map.size[1]; y++) {
                     conf = (config instanceof Function)?config():config; 
-                    construct(conf).placeTo(map, x,y);
+                    merge(conf,{map:map,x:x,y:y});
+                    construct(conf);
                 }   
             }
             return this;

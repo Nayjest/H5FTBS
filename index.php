@@ -14,7 +14,7 @@
             paths:{
                 'jquery':'lib/jquery/jquery-1.7.1.min',
             },
-            //only for dev mode
+            //only for dev mode to disable browser caching. if you need to add breakpoints in Chrome debug, disable it
             urlArgs: "bust=" +  (new Date()).getTime(),
         }
         </script>

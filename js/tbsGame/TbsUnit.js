@@ -1,52 +1,154 @@
-define(['map/Unit'], function(Unit){
+define(['map/Unit', 'Utils'], function(Unit, Utils){
 
     var defaults = {        
         maxMoves:2,
-        moves:2,
+        moves:undefined,
+
         maxHp:10,
         hp:10,        
+        damage:[3,5],
         // quantity of hp that regenerates at each turn
         regenerationSpeed:1,
+        race: 'Default race',
+        canAttackOnThisTurn:true,        
     }
 
     TbsUnit = function(config){
-        mergeUndefined(config,defaults);
-        TbsUnit.superClass.call(this,config);
-        this.moves = config.moves;
-        
+        var self = this;
+        var options = merge({},config);        
+        mergeUndefined(options, defaults);                
+        TbsUnit.superClass.call(this,options);        
+        if (this.moves === undefined) {
+            this.moves = this.maxMoves;
+        }
+        if (this.hp === undefined) {
+            this.hp = this.maxHp;
+        }                
         this._guiLayers = [];
+        this.onLoad(function(){
+            //attack if enemy
+            self.layer.on('click', function(){                                                         
+                /** @var Attacker unit */
+                var u = self.map.game.selectedUnit;
+                if (u && u.isMyTurn() && u.canAttack(self) && u.canMoveTo(self.map.selectedCell)) {               
+                    u.moveTo(self.map.selectedCell).attack(self);                              
+                }
+            });
+            //show directionof attack
+            self.layer.on('mousemove',function(){                
+                /** @var Attacker unit */
+                var u = self.map.game.selectedUnit;
+                if (u && u.isMyTurn() && u.canAttack(self)) {
+                    var attackFromCell = self.mapCell.getClosestNeighborByCursor(u.getCellsCanMove()); 
+                    if (attackFromCell) {
+                        attackFromCell.select();
+                    } else {
+                        console.log('attackFromCell is empty, errors in business logic!');
+                    }    
+                }
+
+            });    
+        });
     }
-    TbsUnit.inheritsFrom('Unit').extendProto({
+    TbsUnit.inheritsFrom(Unit).extendProto({
         onNewTurn:function(){
             this.moves = this.maxMoves;
-            
+            this.canAttackOnThisTurn = true;
             if (this.hp<this.maxHp) {
                 this.hp+=this.regenerationSpeed;
                 if (this.hp>this.maxHp) this.hp = this.maxHp;
             }
-            
+
         },
         placeTo:function(map,x,y) {
             TbsUnit.superProto.placeTo.call(this,map,x,y);
             map.units.push(this);
             return this;
         },
+        isEnemy:function(unit){
+            return this.player.isEnemy(unit.player);
+        },
         moveTo:function(cell){
-                        
+
             this.moves -= this.mapCell.distanceTo(cell);            
             TbsUnit.superProto.moveTo.call(this,cell);
             if (this.map.game.currentPlayer = this.player) {
                 this.showActions();    
             }            
             return this;
-        },        
+        },
+        attack:function(enemyUnit){
+            console.log(this, 'attacked', enemyUnit);
+
+            var damage = Utils.rndInt(this.damage);
+            enemyUnit.hp -= damage;            
+            if (enemyUnit.hp <= 0) {
+                this.kill(enemyUnit);
+            }
+            this.moves = 0;
+            this.canAttackOnThisTurn = false;
+            this._clearMovesHighlight();
+        },
+
+        /**
+        * @return array of all cells that can be attacked by unit on this turn, including unit movements
+        */
+        getCellsCanAttack:function(){
+            if (!this.canAttackOnThisTurn) return [];
+            return this.mapCell.selectByDistance(this.moves + 1,[this.mapCell]);             
+        },
+        getCellsCanMove:function(includeCurrentCell){            
+            //find cells that can be reached ignoring obstacles
+            var cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell]);             
+            if (!includeCurrentCell) {
+                cells.shift();
+            }
+            
+            //detect enemy units on area that can be reached, we can't go through enemy units
+            var self = this;
+            var canNotCross = cells.filter(function(cell){
+                var enemies = cell.getUnits().map(function(unit){
+                  return self.isEnemy(unit);
+                });
+                return enemies.length;
+            });
+            
+            //find cells that can be reached considering obstacles
+            cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell], canNotCross);
+            
+            // remove cells on which unit can't end his turn because there are other units located                                     
+            return cells.filter(function(cell){return !cell.getUnits().length});
+        }, 
+        canAttack:function(unit){
+            return this.isEnemy(unit) && this.getCellsCanAttack().indexOf(unit.mapCell) != -1;
+        },
+        canMoveTo:function(cell){
+            return this.getCellsCanMove().indexOf(cell) != -1;
+        },      
+        isMyTurn:function(){
+            return this.player == this.map.game.currentPlayer;
+        },
         showActions:function(){
             TbsUnit.superProto.showActions.call(this);
             this._highlightMoves();
             return this;
-        },         
-        _clearMovesHighlight:function(){
+        },                 
+        select:function(){                        
+            var selectedUnit = this.map.game.selectedUnit;
+            if (selectedUnit && selectedUnit.canAttack(this)) {
+                // Dont select unit when attack
+                return;
+            } else {
+                TbsUnit.superProto.select.call(this);                            
+            }            
             
+        },  
+        deselect:function(){
+            this._clearMovesHighlight();
+            TbsUnit.superProto.deselect.call(this);    
+        },      
+        _clearMovesHighlight:function(){
+
             for (var i in TbsUnit._movementHighlightLayers) {
                 TbsUnit._movementHighlightLayers[i].destroy();
             }
@@ -57,35 +159,33 @@ define(['map/Unit'], function(Unit){
             var self = this;
             this._clearMovesHighlight();
             if  (this.moves<=0) return;
-            var selected = this.mapCell.selectByDistance(this.moves,[this.mapCell]);   
-            
-            //exclude current cell
-            selected.shift();         
+            var selected = this.getCellsCanMove();
+            console.log('canmove to',selected);
             var l;
             for (var i in selected) {
-                var cell = selected[i];
+                var cell = selected[i];                
                 var unit;
-                if (unit = this.map.getUnitAt(cell.x, cell.y)) {                    
-                    if (this.player.isEnemy(unit.player)) {
+                if (unit = cell.getUnits().pop()) {                    
+                    if (this.isEnemy(unit)) {
                         l = cell.createHighlightLayer('red');  
                     }  
                 }else{
                     l = cell.createHighlightLayer('green');  
                     (function(cell){  
-                        l.$el.bind('click',function(){self.moveTo(cell);});  
+                        l.on('click',function(){self.moveTo(cell);});  
                     })(cell);
                 }                                
                 (function(cell){
-                    l.$el.bind('mouseover',function(){cell.select();});
+                    l.on('mouseover',function(){cell.select();});
                 })(cell);
                 TbsUnit._movementHighlightLayers.push(l);
             }
-            
+
 
         }
     });    
     TbsUnit._movementHighlightLayers = [];
-    
+
     return TbsUnit;
 
 });

@@ -6,7 +6,7 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
     // radians in one degree
     var radInDeg = Math.PI / 180;
 
-    DomLayer = function (config) {
+    var DomLayer = function (config) {
         this.tag = config.tag || 'div';
         this.$el = $('<' + this.tag + '/>');
         DomLayer.superClass.call(this, config);
@@ -36,8 +36,8 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
             var h = this.size[1] * zoom;
 
             var innerTopRightPos = [
-            (this.$parentEl.width() - w) / 2,
-            (this.$parentEl.height() - h) / 2
+                (this.$parentEl.width() - w) / 2,
+                (this.$parentEl.height() - h) / 2
             ];
 
             if (this.angle) {
@@ -53,12 +53,12 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
             }
         },
         setOffset:function(offset){
-            this.offset = [offset[0],offset[1]];
+            this.offset = offset.slice(0);
             this.$el.offset(this.calcDOMOffset());
             return this;
         },
         setSize:function(size){
-            this.size = size;
+            this.size = size.slice(0);
             this.$el.width(size[0]).height(size[1]);
             this.$el.offset(this.calcDOMOffset());  
             return this;
@@ -102,6 +102,20 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
         destroy:function() {
             this.$el.detach();
             DomLayer.superProto.destroy.call(this);
+        },        
+        
+        /**
+        * Position of the top left center
+        * @todo window.pageXOffset if not crossbrowser feature
+        * @todo with rotation?
+        */
+        getScreenPos:function() {
+            var offset = this.$el.offset();
+            return [offset.left - window.pageXOffset, offset.top - window.pageYOffset];
+        },        
+        getCenterScreenPos:function() {
+            var pos = this.getScreenPos();
+            return [pos[0]+~~(this.size[0]/2), pos[1]+~~(this.size[1]/2)];
         }
 
     });        

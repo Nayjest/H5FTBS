@@ -1,19 +1,19 @@
 define(['map/Map','AnimationManager', 'Class'],function(Map, AnimationManager, Class){
     
     var defaults = {    
-        map:null
+        
     }
     
     Game = function(config){
-        mergeUndefined(config, defaults);
-        
+        merge(this, config);
+        this.players = [];
+        mergeUndefined(this, defaults);        
         this.map = config.map instanceof Map? config.map : Map.load(config.map);
         this.animationManager = new AnimationManager();
-        map.game = this;
-        this.players = [];
+        this.map.game = this;        
         if (config.players) {            
             for (var i in config.players) {
-                config.players[i].connectToGame(this);
+                this.addPlayer(config.players[i]);
             }
         }
         //this.currentPlayer = this.players[0].id;
@@ -21,7 +21,12 @@ define(['map/Map','AnimationManager', 'Class'],function(Map, AnimationManager, C
     
     Game.prototype = {
         addPlayer:function(player){
-            this.players.push(player);            
+            player.connectToGame(this);
+        },
+        getPlayerById:function(id){
+            for(var i in this.players) {
+                if (this.players[i].id == id) return this.players[i];
+            }
         }
         
     }

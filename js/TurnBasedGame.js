@@ -5,12 +5,13 @@ define(['Game','Class'],function(Game){
     }
     
     TurnBasedGame = function(config){        
-        mergeUndefined(config, defaults);        
-        if (config.$currentPlayer) {
-            this.$currentPlayer = $(config.$currentPlayer);
+        var options = merge({}, config);                
+        options = mergeUndefined(options,defaults);
+        if (typeof(options.$currentPlayer) == 'string') {
+            options.$currentPlayer = $(options.$currentPlayer);
         }
         this.turn = 0;
-        TurnBasedGame.superClass.call(this,config);                   
+        TurnBasedGame.superClass.call(this,options);                   
         
     }
     TurnBasedGame.inheritsFrom('Game').extendProto({
@@ -70,8 +71,9 @@ define(['Game','Class'],function(Game){
         setCurrentPlayer:function(player){
             this.currentPlayer = player;
             this.$currentPlayer.html(player.name);
-            if (player.units.length>0) {
-                player.units[0].select(player);
+            if (this.selectedUnit) this.selectedUnit.deselect();
+            if (player.units.length) {
+                player.units[0].select();
             }
               
         }

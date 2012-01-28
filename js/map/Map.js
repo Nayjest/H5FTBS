@@ -80,9 +80,10 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'],function(MapObjec
 
         },
         selectCell:function(cell){
-            if (cell) {
+            this.selectedCell = cell;            
+            if (cell) {                
                 this.selectedCellHoverLayer.show().setOffset(cell.layer.offset);
-                this.$infoPanel.html('<b>Территория:</b>'+cell.getInfo());
+                this.$infoPanel.html('<b>Территория:</b>'+cell.getInfo());                
             }else{
                 this.$infoPanel.html('');
                 this.selectedCellHoverLayer.hide();                
@@ -91,14 +92,16 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'],function(MapObjec
         },
         
         /**
-        * @return Unit | null
+        * @return [Unit]
         */
-        getUnitAt:function(x,y){
+        getUnitsAt:function(x,y){
             var cell;
+            var units = [];
             for (var i in this.units) {                
                 cell = this.units[i].mapCell;        
-                if (cell && (cell.x == x) && (cell.y == y)) return this.units[i];
-            }
+                if (cell && (cell.x == x) && (cell.y == y)) units.push(this.units[i]);
+            }            
+            return units;
         }
     }
     

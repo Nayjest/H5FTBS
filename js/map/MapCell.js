@@ -1,4 +1,4 @@
-define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(DomLayer,Highlight,$){
+define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function(DomLayer,Highlight,$){
 
     var mapCellTypes = {
         road:0,
@@ -26,14 +26,26 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(Do
 
     MapCell = function(config){
         var self = this;
+        this._onLoad = [];
         if (config) merge(this,config);
         mergeUndefined(this,defaults);
-        (this.layer instanceof DomLayer) || (this.layer = new DomLayer(this.layer));     
-        this.layer.highlight = new Highlight(this.layer,{});
-
-        this.layer.on('mouseover',function(e){
-            self.map.selectCell(self);            
-        });   
+        if (this.map) {
+            this.map.cells[this.x][this.y] = this;    
+        }
+        DomLayer.load(this.layer,function(obj){            
+            obj.highlight = new Highlight(obj,{});
+            obj.on('mouseover',function(e){
+                self.map.selectCell(self);            
+            });   
+            self.layer = obj;  
+            if (config.map && typeof(config.x)=='number' && typeof(config.y)=='number') {
+                self.placeTo(config.map,config.x,config.y);
+            }
+            self.ready = true;            
+            for(var i in self._onLoad) {                
+                self._onLoad[i](self);                
+            }
+        });        
     }   
 
     MapCell.types = mapCellTypes;
@@ -48,6 +60,12 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(Do
             this._setupLayer();            
             map.cells[x][y]=this;    
             return this;    
+        },
+        onLoad:function(callback){
+            if (!this.ready)
+                this._onLoad.push(callback);
+            else
+                callback(this);    
         },
         nearby:function(){            
             var self = this;
@@ -99,27 +117,34 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(Do
 
         /**
         * @argument int distance
-        * @argument [MapCell] selected
+        * @argument [MapCell] selected -- Already in resulting list
+        * @argument [MapCell] excludeCells -- ignore and don't cross that cells (use as obstacles)
+        * 
+        * @todo implement exclude
         * @return list of map cells that can be reached in <distance> steps
         */
-        selectByDistance:function(distance, selected){            
+        selectByDistance:function(distance, selected, excludeCells){            
             if (!selected) selected = [];
+            if (!excludeCells) excludeCells = [];
             if (distance == 0) return selected;
 
             function notSelected(mapCell){
-                for (var i in selected) {
-                    if (selected[i] == mapCell) return false;
-                }
-                return true;
+                return selected.indexOf(mapCell) == -1                
             }
+            function notExcluded(mapCell) {
+                return excludeCells.indexOf(mapCell) == -1                
+            }
+            
             var nearCells = this.nearby();
+            var cell;
             for (var i in nearCells) {
-                if (notSelected(nearCells[i])){
+                cell = nearCells[i];
+                if (notSelected(cell) && notExcluded(cell)){
                     selected.push(nearCells[i]);                    
                 }
             }
             for (var i in nearCells) {
-                nearCells[i].selectByDistance(distance - 1, selected);
+                if (notExcluded(nearCells[i])) nearCells[i].selectByDistance(distance - 1, selected, excludeCells);
             }
             return selected;
 
@@ -143,7 +168,13 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery'], function(Do
         },
         getInfo:function(){
             return '['+this.x+','+this.y+']<br> '+MapCell.descriptions[this.type];
-        }
+        },
+        /**
+        * @return array of units located on this map cell
+        */
+        getUnits:function(){
+            return this.map.getUnitsAt(this.x, this.y);
+        }    
 
     }
 

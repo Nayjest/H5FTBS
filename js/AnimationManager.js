@@ -9,8 +9,8 @@ define(['Class'], function(){
     
     AnimationManager = function(config){
         if (!config) config = {};
-        mergeUndefined(config, defaults);
-        merge(this,config);
+        if (config) mergeUndefined(this, config);
+        mergeUndefined(this, defaults);
         
     }
     

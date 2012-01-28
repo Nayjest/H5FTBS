@@ -4,9 +4,12 @@ require(
         'TurnBasedGame', 
         'map/gex/Gex', 
         'Player', 
-        'tbsGame/TbsUnit'
+        'tbsGame/TbsUnit',
+        'Mouse',
+        'jquery'
     ],
-  function(MapGenerator,TurnBasedGame,Gex,Player,TbsUnit){  
+  function(MapGenerator,TurnBasedGame,Gex,Player,TbsUnit, Mouse, $){
+  
     $(document).ready(function(){
 
         // prevent selecting
@@ -23,50 +26,19 @@ require(
             ]
         });    
 
-        unit = new TbsUnit({
-            player: game.players[0],
-            layer:{
-                size:[42,67],
-                offset:[0,0],
-                tag:'div',            
-                attr:{
-                    'class':'noselect',
-                    //src:'/img/units/human/peasant/1b.png'
-                },            
-                css:{            
-                    zIndex:99999,
-                    position:'absolute',
-                    backgroundImage:'url(/img/units/human/peasant/1b.png)',
-                    backgroundSize:'cover',
-                    '-webkit-background-size':'cover',
-                    backgroundPosition:'center'
-                }
-            }
-        }).placeTo(map,1,1);
+        TbsUnit.load('unit/human/peasant/peasant',function(u){            
+            u1 = u.placeTo(map,1,1).setPlayer(1);
+        });
+        TbsUnit.load('unit/human/peasant/peasant',function(u){
+            u2 = u.placeTo(map,1,3).setPlayer(1);
+        });
+        
+        
+        
 
-        unit2 = new TbsUnit({
-            player: game.players[0],
-            layer:{
-                size:[42,67],
-                offset:[0,0],
-                tag:'div',           
-                attr:{
-                    'class':'noselect',                
-                },            
-                css:{            
-                    zIndex:99999,
-                    position:'absolute',
-                    backgroundImage:'url(/img/units/human/peasant/1b.png)',
-                    backgroundSize:'cover',
-                    '-webkit-background-size':'cover',
-                    backgroundPosition:'center'
-                }
-            }
-        }).placeTo(map,4,1);
-
-        unit3 = new TbsUnit({
-            moves:3,
-            player: game.players[1],
+        u3 = new TbsUnit({
+            moves:4,            
+            maxMoves:4,
             layer:{
                 size:[52,80],
                 offset:[0,0],
@@ -84,7 +56,7 @@ require(
                     backgroundPosition:'center'
                 }
             }
-        }).placeTo(map,7,2);
+        }).placeTo(map,7,2).setPlayer(2);
 
         //    var unit2 = new DomLayer({
         //        size:[63,78],
@@ -99,7 +71,7 @@ require(
         //        }
         //    }).setParent(map.layer).update();
 
-        console.log(unit);
+        
         //console.log(map.cells[3][3].layer);
         //map.cells[3][3].layer.destroy();
         $('body').click(function(e){
@@ -107,6 +79,7 @@ require(
                 map.selectCell(null);
             }
         });
+        Mouse.init($('body')[0]);        
     });
 
 });

@@ -65,7 +65,7 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'],function(MapObjec
             this.layer = new DOMLayer({
                 size:[this.size[0]*this.cellSize[0], this.size[1]*this.cellSize[1]],
                 css:{
-                    marginTop:this.size[1]*this.cellSize[1]+105,
+                    marginTop:this.size[1]*this.cellSize[1]+105
                 }
             });   
         },

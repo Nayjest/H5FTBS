@@ -16,12 +16,12 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], fu
         deepWater:7,
         ice:8,
         lava:9,
-        wall:10,
+        wall:10
     }
 
     var defaults = {
         type: mapCellTypes.plane,
-        layer:{},
+        layer:{}
     }
 
     MapCell = function(config){
@@ -49,23 +49,43 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], fu
     }   
 
     MapCell.types = mapCellTypes;
+    MapCell.movementTypes = {
+            swim:'swim',
+            walk:'walk',
+            fly:'fly'
+    }
     MapCell.descriptions = [];
     MapCell.descriptions[MapCell.types.plane] = 'Равнина';
 
     MapCell.prototype = {
         placeTo:function(map,x,y) {
-            this.map = map;
-            this.x = x;
-            this.y = y;
-            this._setupLayer();            
-            map.cells[x][y]=this;    
-            return this;    
+            var me = this;
+            me.map = map;
+            me.x = x;
+            me.y = y;
+            //me._setupLayer();
+            if (map.cells[x][y] instanceof MapCell) {
+                map.cells[x][y].free();
+            }
+            map.cells[x][y] = me;
+            me.onLoad(function(){
+                me._setupLayer()
+            });
+            return me;
         },
         onLoad:function(callback){
             if (!this.ready)
                 this._onLoad.push(callback);
             else
-                callback(this);    
+                callback(this);
+            return this;
+        },
+        free:function(){
+          var me = this;
+          if (me.map.cells[me.x] && me.map.cells[me.x][me.y]) me.map.cells[me.x][me.y] = null;
+          me.onLoad(function(){
+              me.layer.destroy();
+          });
         },
         nearby:function(){            
             var self = this;
@@ -190,7 +210,7 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], fu
                         src: '/img/terrain/grass1/grass1_r1.png'
                     },
                     css:{
-                        position:'absolute',
+                        position:'absolute'
                     }
                 }
             }; 

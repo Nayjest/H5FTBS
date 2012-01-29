@@ -4,15 +4,30 @@
 define(['layers/DomLayer', 'Loadable'], function(DomLayer){
 
     var defaults = {
-        layer:{},
+        layer:null,
         description: 'No info',
+
+        /**
+         * @var bool|string|array
+         * true: can pass any case
+         * false: can't pass any case
+         * MapCell.movementTypes.fly -- fly only (add limitations for all other)
+         * [MapCell.movementTypes.fly, MapCell.movementTypes.walk] (add limitations for all other, no swim in this case)
+         *
+         */
+        passable: false
     }
 
+    /**
+     *
+     * @param config
+     */
     var MapObject = function(config){
         var self = this;   
         this._onLoad = [];
         if (config) merge(this,config);
-        mergeUndefined(this,defaults);  
+        mergeUndefined(this,defaults);
+
         DomLayer.load(this.layer,function(layer){            
             
             layer.on('click',function(){            

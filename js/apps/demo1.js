@@ -1,6 +1,6 @@
 define(
-    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'Mouse', 'jquery'],
-    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, Mouse, $) {
+    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
+    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $) {
         return function () {
 
             map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
@@ -21,12 +21,30 @@ define(
             });
 
 
+            stone = new MapObject({
+                layer:{
+                    size:[50, 50],
+                    tag:'div',
+                    attr:{
+                        'class':'noselect',
+                    },
+                    css:{
+                        zIndex:99999,
+                        position:'absolute',
+                        backgroundImage:'url(/res/map/terrain/stone/img/5_blue_spiral.png)',
+                        backgroundSize:'cover',
+                        '-webkit-background-size':'cover',
+                        backgroundPosition:'center'
+                    }
+                }
+            }).placeTo(map, 4, 4);
+
+
             u3 = new TbsUnit({
                 moves:4,
                 maxMoves:4,
                 layer:{
                     size:[52, 80],
-                    offset:[0, 0],
                     tag:'div',
 
                     attr:{
@@ -42,6 +60,7 @@ define(
                     }
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
+
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

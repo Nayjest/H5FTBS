@@ -9,7 +9,7 @@ require(
         $(document).ready(function () {
 
             // prevent selecting
-            $('.noselect').live('selectstart dragstart', function (evt) {
+            $('.noselect, #area *').live('selectstart dragstart', function (evt) {
                 evt.preventDefault();
                 return false;
             });

@@ -38,10 +38,11 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], fu
                 self.map.selectCell(self);            
             });   
             self.layer = obj;  
+            self.ready = true;
             if (config.map && typeof(config.x)=='number' && typeof(config.y)=='number') {
                 self.placeTo(config.map,config.x,config.y);
             }
-            self.ready = true;            
+
             for(var i in self._onLoad) {                
                 self._onLoad[i](self);                
             }

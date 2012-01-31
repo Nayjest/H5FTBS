@@ -1,5 +1,5 @@
 {
-    size:[42,67],
+    size:[42,66],
     offset:[0,0],
     tag:'div',            
     attr:{

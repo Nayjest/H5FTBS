@@ -22,6 +22,7 @@ define(
 
 
             stone = new MapObject({
+                passable:false,
                 layer:{
                     size:[50, 50],
                     tag:'div',
@@ -37,7 +38,7 @@ define(
                         backgroundPosition:'center'
                     }
                 }
-            }).placeTo(map, 4, 4);
+            }).placeTo(map, 3, 1);
 
 
             u3 = new TbsUnit({

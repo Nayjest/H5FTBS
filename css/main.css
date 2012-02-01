@@ -1,3 +1,6 @@
+html,body{
+    height:100%; /** it's important! */
+}
 div {
     padding: 0;
     margin: 0;
@@ -10,10 +13,10 @@ body {
     overflow: hidden;
 }
 
-/* .highlighted {
-    outline: 1px solid white;
+ .highlighted {
+    /*outline: 1px solid white;*/
 }
-*/
+
 
 /** =========================== Theme specific =================== */
 #sidebar {

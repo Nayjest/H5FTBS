@@ -10,14 +10,21 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
         // quantity of hp that regenerates at each turn
         regenerationSpeed:1,
         race: 'Default race',
-        canAttackOnThisTurn:true,        
+        canAttackOnThisTurn:true,
+        movementTypes:null
     }
 
     TbsUnit = function(config){
         var self = this;
         var options = merge({},config);        
         mergeUndefined(options, defaults);                
-        TbsUnit.superClass.call(this,options);        
+        TbsUnit.superClass.call(this,options);
+
+        //by default unit can walk only
+        if (!this.movementTypes) {
+            this.movementTypes = [TbsUnit.movementTypes.walk];
+        }
+
         if (this.moves === undefined) {
             this.moves = this.maxMoves;
         }
@@ -49,6 +56,11 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
 
             });    
         });
+    }
+    TbsUnit.movementTypes = {
+                swim:'swim',
+                walk:'walk',
+                fly:'fly'
     }
     TbsUnit.inheritsFrom(Unit).extendProto({
         onNewTurn:function(){
@@ -98,21 +110,22 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
             return this.mapCell.selectByDistance(this.moves + 1,[this.mapCell]);             
         },
         getCellsCanMove:function(includeCurrentCell){            
+            var self = this;
+
             //find cells that can be reached ignoring obstacles
             var cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell]);             
             if (!includeCurrentCell) {
                 cells.shift();
             }
             
-            //detect enemy units on area that can be reached, we can't go through enemy units
-            var self = this;
+
+            // + detect not passable map objects excepting friend units, that can be crossed
             var canNotCross = cells.filter(function(cell){
-                var enemies = cell.getUnits().map(function(unit){
-                  return self.isEnemy(unit);
+                var obj = cell.getObjects().filter(function(obj){
+                  return (obj instanceof Unit && self.isEnemy(obj)) || !obj.passable;
                 });
-                return enemies.length;
+                return obj.length;
             });
-            
             //find cells that can be reached considering obstacles
             cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell], canNotCross);
             

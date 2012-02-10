@@ -1,13 +1,14 @@
 /**
 * Class utils module
 */
-define([], function() {       
+define([], function() {
+    var global = this;
     /**
     * 
     */
     function merge(target, src){
         for (var i in src) {
-            src.hasOwnProperty(i) && (target[i] = src[i]);
+            if (src.hasOwnProperty(i)) target[i] = src[i];
         }
         return target;
     }
@@ -18,11 +19,10 @@ define([], function() {
     function mergeUndefined(target, src){
 
         for (var i in src) {
-            src.hasOwnProperty(i) && !target.hasOwnProperty(i)  && (target[i] = src[i]);
+            if (src.hasOwnProperty(i) && !target.hasOwnProperty(i))  target[i] = src[i];
         }
         return target;
     }
-
 
     var Inheritance = function(){};
     
@@ -31,7 +31,7 @@ define([], function() {
         inheritsFrom:function(superClass) {
             // Если передавать superClass строкой, то можно реализовать асинхронную загрузку файла с superClass и привязывать его к текущему классу уже после загрузки
             if (typeof superClass == 'string') {
-                superClass = window[superClass];
+                superClass = global[superClass];
             }
 
             var superProto = Inheritance.prototype = superClass.prototype;
@@ -67,9 +67,9 @@ define([], function() {
         return new _class(_config);
     }
     
-    window.merge = merge;
-    window.mergeUndefined = mergeUndefined;
-    window.construct = construct;
+    global.merge = merge;
+    global.mergeUndefined = mergeUndefined;
+    global.construct = construct;
 
 });
 

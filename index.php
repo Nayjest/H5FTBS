@@ -26,7 +26,7 @@
 </head>
 
 <body id="body">
-<div id="area"></div>
+
 <div id="sidebar">
     <div>
         Ходит

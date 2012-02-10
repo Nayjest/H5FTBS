@@ -1,4 +1,4 @@
-define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (DomLayer, Highlight, $) {
+define(['layers/DomImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $) {
 
     var mapCellTypes = {
         road:0,
@@ -32,7 +32,7 @@ define(['layers/DomLayer', 'layers/components/Highlight', 'jquery', 'Utils'], fu
         if (this.map) {
             this.map.cells[this.x][this.y] = this;
         }
-        DomLayer.load(this.layer, function (obj) {
+        ImageLayer.load(this.layer, function (obj) {
             obj.highlight = new Highlight(obj, {});
             obj.on('mouseover', function (e) {
                 self.map.selectCell(self);

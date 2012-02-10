@@ -16,18 +16,13 @@
 define(['Class'], function() {
     
     function Node(parent, children) {	
-        this.children = [];	
-        if (parent) {
-            this.setParent(parent);
-        } else {
-            this.parent = null;
-        }	
+        this.children = [];
+        this.setParent(parent);
         if (children) {
             for (var i in children) {
                 children.addTo(this);
             }
-        } 
-
+        }
     }
     
     Node.prototype = {
@@ -58,6 +53,7 @@ define(['Class'], function() {
                 for (var i in children) {
                     if (children[i] === this) {
                         delete children[i];
+                        this.parent = null;
                         return this;
                     }
                 }

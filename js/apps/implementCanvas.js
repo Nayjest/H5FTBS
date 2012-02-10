@@ -1,6 +1,6 @@
 define(
-    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'Canvas', 'layers/canvas/CanvasLayer', 'layers/canvas/CanvasImageLayer'  , 'jquery'],
-    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, Canvas, CanvasLayer, CanvasImageLayer, $) {
+    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'Canvas', 'layers/canvas/CanvasLayer', 'layers/canvas/CanvasImageLayer', 'layers/DomLayer', 'layers/DomImageLayer'  , 'jquery'],
+    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, Canvas, CanvasLayer, CanvasImageLayer, DomLayer, DomImageLayer, $) {
         return function () {
             canvas = new Canvas({
                 size:[$('body').width(), $('body').height()],
@@ -10,69 +10,51 @@ define(
             ctx = canvas.context;
             ctx.fillRect(0, 0, 100, 100);
 
-            layerConfig = {
-                size:[300, 300],
-                offset:[-500, 0],
-                tag:'div',
-                attr:{
-                    'class':'noselect',
-                },
-                css:{
-                    zIndex:99999,
-                    position:'absolute',
-                    backgroundImage:'url(/res/map/terrain/stone/img/5_blue_spiral.png)',
-                    backgroundSize:'cover',
-                    '-webkit-background-size':'cover',
-                    backgroundPosition:'center'
-                }
-            }
-            layerConfig2 = {
-                size:[50, 50],
-                offset:[0, 0],
-                tag:'div',
-                attr:{
-                    'class':'noselect',
-                },
-                css:{
-                    zIndex:99999,
-                    position:'absolute',
-                    backgroundImage:'url(/res/map/terrain/stone/img/5_blue_spiral.png)',
-                    backgroundSize:'cover',
-                    '-webkit-background-size':'cover',
-                    backgroundPosition:'center'
-                }
-            };
-            layer = new DOMLayer(layerConfig);
-            layer2 = new DOMLayer(layerConfig2);
-            layer2.setParent(layer).update();
-            //layer.setOffset([0,-120]);
-            layer2.setOffset([100, 100]);
-            layer.on('mousemove',
-                function () {
-                    layer.$el.css({outline:'1px solid red'});
-                }).on('mouseleave', function () {
-                    layer.$el.css({outline:'none'});
-                });
-            cl = new CanvasImageLayer({
+
+            l1 = new DomImageLayer({
                 image:'/res/map/terrain/stone/img/5_blue_spiral.png',
                 size:[300, 300],
-                offset:[100, 0]
+                offset:[-200, 0]
             });
-            cl2 = new CanvasImageLayer({
+            l2 = new DomImageLayer({
                 image:'/res/map/terrain/stone/img/5_blue_spiral.png',
                 size:[50, 50],
                 offset:[200, 100],
-                visible:false,
+                //visible:false,
+
+            });
+            $.when(l1.loaded, l2.loaded).done(function () {
+                l2.setParent(l1).update();
+                //layer.setOffset([0,-120]);
+                l2.on('mousemove',
+                    function () {
+                        l2.$el.css({outline:'1px solid red'});
+                    }).on('mouseleave', function () {
+                        l2.$el.css({outline:'none'});
+                    });
 
             });
 
-            cl.onLoad(function () {
-                cl2.onLoad(function () {
-                    cl2.setParent(cl).show().update();
-                });
+            c1 = new CanvasImageLayer({
+                image:'/res/map/terrain/stone/img/5_blue_spiral.png',
+                size:[300, 300],
+                fit:CanvasImageLayer.fit.ORIGINAL,
+                offset:[0, 0]
+            });
+            c2 = new CanvasImageLayer({
+                image:'/res/map/terrain/stone/img/5_blue_spiral.png',
+                size:[50, 50],
+                offset:[200, 100]
+                //visible:false,
 
             });
 
-
+            $.when(c1.loaded, c2.loaded).done(function () {
+                c2.setParent(c1);
+                c1.update();
+                //c1;
+                c1.draw();
+                c2.draw();
+            });
         }
     });

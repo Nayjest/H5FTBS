@@ -7,7 +7,7 @@
 */
 define(['jquery'], function($) {
     
-    var suppoertedEvents = [
+    var supportedEvents = [
         'mousedown',
         'mouseenter',
         'mouseleave',

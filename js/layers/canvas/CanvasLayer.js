@@ -19,12 +19,21 @@ define(['layers/AbstractLayer', 'Canvas', 'Loadable'], function(AbstractLayer, C
     var CanvasLayer = function (config) {
         var options = merge({},config);
         mergeUndefined(options, defaults);
-        CanvasLayer.superClass.call(this, options);
+        Me.superClass.call(this, options);
         this.setCanvas(options.canvas);
     }
-    CanvasLayer.inheritsFrom(AbstractLayer).extendProto({
+    var Me = CanvasLayer.inheritsFrom(AbstractLayer).extendProto({
         draw:function(){
           if (this.visible) this.drawMethod.call(this);
+        },
+        getAbsoluteOffset:function () {
+            var offset = Me.superProto.getAbsoluteOffset.call(this);
+            var $el = $(this.canvas.domElement);
+            //offset[0] += ~~$el.width()/2;
+            //offset[1] += ~~$el.height()/2;
+            offset[0] += ~~$('body').width()/2;
+            offset[1] += ~~$('body').height()/2;
+            return offset;
         },
         setCanvas:function(canvas){
           if (!canvas) canvas = _getDefaultCanvas();
@@ -53,8 +62,9 @@ define(['layers/AbstractLayer', 'Canvas', 'Loadable'], function(AbstractLayer, C
         },        
         update:function() {
             // @todo return CanvasLayer.superProto.update.apply(this,Array.prototype.splice.call(arguments,0));
+            CanvasLayer.superProto.update.call(this);
             this.draw();
-            return CanvasLayer.superProto.update.call(this);
+            return this;
         },
         setParent:function(parent) {
             CanvasLayer.superProto.setParent.call(this, parent);
@@ -86,6 +96,6 @@ define(['layers/AbstractLayer', 'Canvas', 'Loadable'], function(AbstractLayer, C
     });        
     
     
-    return CanvasLayer;
+    return Me;
 
 });

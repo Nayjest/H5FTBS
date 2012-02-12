@@ -32,7 +32,11 @@ define(['jquery', 'Class'], function ($) {
                 eval('data = ' + data);
             }
             if (!data._class) data._class = Me;
-            deferred.resolve(construct(data));
+            // @todo fix bug on mapeditor on double call of construct(data) with DomImageLayer
+            //console.log('constructed:',construct(data));
+            var obj = construct(data);
+            if ((typeof(name) == 'string') || name instanceof String) obj.loadedFrom = name;
+            deferred.resolve(obj);
             Loadable.processingFiles--;
         };
 

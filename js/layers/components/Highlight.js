@@ -16,20 +16,17 @@ define(['jquery', 'Class'], function($){
             showOn:'mouseover',
             hideOn:'mouseleave'
         });
-        var bindings = {} 
-        bindings[this.showOn] = eventHandlers.show;
-        bindings[this.hideOn] = eventHandlers.hide;
-        owner.$el.bind(bindings).get(0).highlight = this;
-
-
+        owner.on(this.showOn, eventHandlers.show);
+        owner.on(this.hideOn, eventHandlers.hide);
+        if (owner.$el) owner.$el.get(0).highlight = this;
     }
 
     Highlight.prototype = {
         show:function() {		
-            this.owner.$el.addClass(this.cssClass);
+            if (this.owner.$el) this.owner.$el.addClass(this.cssClass);
         },
         hide:function() {
-            this.owner.$el.removeClass(this.cssClass);
+            if (this.owner.$el) this.owner.$el.removeClass(this.cssClass);
         }
 
     };

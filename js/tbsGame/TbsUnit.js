@@ -17,9 +17,8 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
     TbsUnit = function(config){
         var self = this;
         var options = merge({},config);        
-        mergeUndefined(options, defaults);                
+        mergeUndefined(options, defaults);
         TbsUnit.superClass.call(this,options);
-
         //by default unit can walk only
         if (!this.movementTypes) {
             this.movementTypes = [TbsUnit.movementTypes.walk];

@@ -1,4 +1,4 @@
-define(['layers/DomImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $) {
+define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $) {
 
     var mapCellTypes = {
         road:0,
@@ -33,6 +33,7 @@ define(['layers/DomImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'
             this.map.cells[this.x][this.y] = this;
         }
         ImageLayer.load(this.layer, function (obj) {
+
             obj.highlight = new Highlight(obj, {});
             obj.on('mouseover', function (e) {
                 self.map.selectCell(self);
@@ -57,12 +58,13 @@ define(['layers/DomImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'
         placeTo:function (map, x, y) {
             var me = this;
             me.map = map;
+            if (map.cells[x][y] instanceof MapCell) {
+                if (map.cells[x][y] !== me){
+                    map.cells[x][y].free();
+                }
+            }
             me.x = x;
             me.y = y;
-            //me._setupLayer();
-            if (map.cells[x][y] instanceof MapCell) {
-                map.cells[x][y].free();
-            }
             map.cells[x][y] = me;
             me.onLoad(function () {
                 me._setupLayer()

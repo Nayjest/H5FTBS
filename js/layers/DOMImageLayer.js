@@ -62,8 +62,8 @@ define(['layers/DomLayer', 'Loadable'], function (DomLayer) {
                     me.ready = true;
                     me.update();
                     deferred.resolve(me);
-                }
-            this.loaded = deferred.promise();
+                };
+            me.loaded = deferred.promise();
             if (typeof(image) === 'string') {
                 url = image;
             } else if (image instanceof Image) { //@todo check Image.complete

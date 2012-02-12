@@ -85,9 +85,9 @@ define(['map/MapCell','map/Map' ,'layers/DomLayer', 'Utils', 'Mouse'], function(
                     size:this.map.cellSize,
                     css:{
                         zIndex:Map.zLevels.mapCellHighlight+1,
-                        position:'absolute',
+                        position:'absolute'
                     },
-                    parent:this.map.layer,                    
+                    parent:this.map.layer
             }).update();            
         },
         

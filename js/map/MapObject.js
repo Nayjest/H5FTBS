@@ -1,7 +1,7 @@
 /**
 * MapObject class
 */
-define(['layers/DomLayer', 'Loadable'], function(DomLayer){
+define(['layers/ImageLayer', 'Loadable'], function(ImageLayer){
 
     var defaults = {
         layer:null,
@@ -28,7 +28,7 @@ define(['layers/DomLayer', 'Loadable'], function(DomLayer){
         if (config) merge(this,config);
         mergeUndefined(this,defaults);
 
-        DomLayer.load(this.layer,function(layer){
+        ImageLayer.load(this.layer,function(layer){
 
             layer.on('click',function(){
                self.select(self.map.game.currentPlayer);
@@ -54,7 +54,6 @@ define(['layers/DomLayer', 'Loadable'], function(DomLayer){
             this.map = map;
             this.mapCell = map.cells[x][y];
             this.mapCell.onLoad(function(cell){self.onLoad(function(){
-                console.log('cell offset',cell.layer.offset);
                 self.layer
                     .setParent(map.layer)
                     .setOffset(cell.layer.offset)

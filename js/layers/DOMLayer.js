@@ -1,6 +1,7 @@
 /**
  *  module DomLayer
  */
+
 define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], function (AbstractLayer, JqueryEventsMixin, $) {
 
     // radians in one degree
@@ -85,6 +86,7 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
 
         },
         setParent:function (parent) {
+            //Put DOM element inside parent DOM element
             if (parent instanceof Me) {
                 this.$parentEl = parent.$el;
                 this.$el.appendTo(this.$parentEl);

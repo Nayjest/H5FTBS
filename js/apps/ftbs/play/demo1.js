@@ -1,6 +1,6 @@
 define(
-    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
-    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $) {
+    ['widgets/sidebar/sidebar','map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
+    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $) {
         return function () {
 
             map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
@@ -24,44 +24,20 @@ define(
             stone = new MapObject({
                 passable:false,
                 layer:{
-                    size:[50, 50],
-                    tag:'div',
-                    attr:{
-                        'class':'noselect',
-                    },
-                    css:{
-                        zIndex:99999,
-                        position:'absolute',
-                        backgroundImage:'url(/res/map/terrain/stone/img/5_blue_spiral.png)',
-                        backgroundSize:'cover',
-                        '-webkit-background-size':'cover',
-                        backgroundPosition:'center'
-                    }
+                    image:'/res/map/terrain/stone/img/5_blue_spiral.png',
+                    size:[50, 50]
                 }
             }).placeTo(map, 3, 1);
-
 
             u3 = new TbsUnit({
                 moves:4,
                 maxMoves:4,
                 layer:{
-                    size:[52, 80],
-                    tag:'div',
-
-                    attr:{
-                        'class':'noselect',
-                    },
-                    css:{
-                        zIndex:99999,
-                        position:'absolute',
-                        backgroundImage:'url(/img/units/Elvish_archer/ea1.png)',
-                        backgroundSize:'cover',
-                        '-webkit-background-size':'cover',
-                        backgroundPosition:'center'
-                    }
+                    image:'/img/units/Elvish_archer/ea1.png',
+                    size:[52, 80]
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
-
+            u3.onLoad(function(me){console.log('ok',me); me.layer.update();});
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

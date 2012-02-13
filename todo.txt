@@ -33,3 +33,7 @@
 	}
 
 * Сделать, чтобы СanvasEventHandler проходил только по элементам, для которых назначены обработчики событий (добавлять канвасЛайер в список только при назначении .on(evt,callback), подумать по поводу иерархии лейеров и событий)
+
+* Fix bug with module system: error when make Gex not global (maby I need to implement class loading via require.js in Loading.js)
+
+* Проблемка: Utils нельзя сделать НЕ глобальной переменной, т.к. иначе при загрузке js файлов чере Loadable объект не доступен

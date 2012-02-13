@@ -106,30 +106,37 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
         */
         getCellsCanAttack:function(){
             if (!this.canAttackOnThisTurn) return [];
-            return this.mapCell.selectByDistance(this.moves + 1,[this.mapCell]);             
+            return this.mapCell.selectByDistance(this.moves + 1,[]);
         },
         getCellsCanMove:function(includeCurrentCell){            
             var self = this;
 
             //find cells that can be reached ignoring obstacles
-            var cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell]);             
+            var cells =  this.mapCell.selectByDistance(this.moves);
             if (!includeCurrentCell) {
+                //@todo Error!!!! Not current cell shifting!!
                 cells.shift();
             }
-            
 
             // + detect not passable map objects excepting friend units, that can be crossed
             var canNotCross = cells.filter(function(cell){
                 var obj = cell.getObjects().filter(function(obj){
-                  return (obj instanceof Unit && self.isEnemy(obj)) || !obj.passable;
+                    if (obj instanceof Unit) {
+                        return self.isEnemy(obj);
+                    }
+                    return !obj.passable;
                 });
                 return obj.length;
             });
             //find cells that can be reached considering obstacles
-            cells =  this.mapCell.selectByDistance(this.moves,[this.mapCell], canNotCross);
+            cells =  this.mapCell.selectByDistance(this.moves,[], canNotCross);
             
             // remove cells on which unit can't end his turn because there are other units located                                     
-            return cells.filter(function(cell){return !cell.getUnits().length});
+            return cells.filter(function(cell){
+                var units = cell.getUnits();
+                if (!units.length) return true;
+                if (units.pop()===self) return true;
+            });
         }, 
         canAttack:function(unit){
             return this.isEnemy(unit) && this.getCellsCanAttack().indexOf(unit.mapCell) != -1;
@@ -171,17 +178,16 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
             var self = this;
             this._clearMovesHighlight();
             if  (this.moves<=0) return;
-            var selected = this.getCellsCanMove();
-            console.log('canmove to',selected);
+            var selected = this.getCellsCanMove(true);
             var l;
             for (var i = selected.length;i--;) {
                 var cell = selected[i];
                 var unit = cell.getUnits().pop();
-                if (unit) {
-                    if (this.isEnemy(unit)) {
+                if (unit && this.isEnemy(unit)) {
+
                         l = cell.createHighlightLayer('red');  
-                    }  
-                }else{
+
+                }else if (!unit || unit === self){
                     l = cell.createHighlightLayer('green');  
                     (function(cell){  
                         l.on('click',function(){self.moveTo(cell);});  

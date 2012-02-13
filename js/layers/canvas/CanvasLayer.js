@@ -2,30 +2,34 @@
  *  module CanvasLayer
  */
 define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/ 'jquery', 'Loadable'], function (AbstractLayer, Canvas, /*CanvasLayerEvents,*/ $) {
+    "use strict";
+    //Best way to get global object (window in browser) in strict mode
+    var FN = Function, glob = FN('return this')();
 
     // radians in one degree
     var radInDeg = Math.PI / 180;
+    // instance counter
     var _id = 0;
     var defaults = {
         visible:true,
         drawMethod:function () {
-            console.log('CanvasLayer is abstract class it can not be drawn');
+            throw new Error('CanvasLayer is abstract class it can not be drawn');
         }
     }
 
     var _getDefaultCanvas = function () {
-        if (this.canvas) return this.canvas;
-        return canvas = new Canvas({
+        if (glob.canvas) return glob.canvas;
+        return glob.canvas = new Canvas({
             size:[$('body').width(), $('body').height()],
             id:'canvas',
             containerId:'body'
         });
     }
 
-
+    //define as CanvasLayer for better class detection in Chrome
     var CanvasLayer = function (config) {
-        var options = merge({}, config);
-        mergeUndefined(options, defaults);
+        var options = glob.merge({}, config);
+        glob.mergeUndefined(options, defaults);
         Me.superClass.call(this, options);
         this.setCanvas(options.canvas);
         this._eventHandlers = [];
@@ -113,10 +117,10 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
             }
             callbacks.add(handler);
         },
-        fireEvent:function(eventName, arguments){
+        fireEvent:function (eventName, args) {
             var $callbacks = this._eventHandlers[eventName];
             if ($callbacks) {
-                $callbacks.fireWith(this,arguments);
+                $callbacks.fireWith(this, args);
             }
         }
 

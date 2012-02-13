@@ -1,4 +1,4 @@
-define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $) {
+define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $, Utils) {
 
     var mapCellTypes = {
         road:0,
@@ -148,7 +148,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
          * @return list of map cells that can be reached in <distance> steps
          */
         selectByDistance:function (distance, selected, excludeCells) {
-            if (!selected) selected = [];
+            if (!selected) selected = [this];
             if (!excludeCells) excludeCells = [];
             if (distance == 0) return selected;
 

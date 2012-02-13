@@ -14,7 +14,7 @@
 * 
 */
 define(['Class'], function() {
-    
+    "use strict";
     function Node(parent, children) {	
         this.children = [];
         this.setParent(parent);

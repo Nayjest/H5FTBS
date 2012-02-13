@@ -1,8 +1,5 @@
 define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
-
-
-
-    Player = function(config){        
+    Player = function(config){
         var defaults = {
             controller:Player.controllers.local,
             killedUnits:[],        

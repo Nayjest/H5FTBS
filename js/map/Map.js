@@ -44,7 +44,6 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
         this._createLayer();
         this._clearCells();
         this.objects = options.objects;
-        console.log(options.objects);
         for (var i = options.length; i--;) {
             if (!(options.objects[i] instanceof MapObject)) options.objects[i] = construct(options.objects[i]);
             options.objects[i].placeTo(this, options.objects[i].x, options.objects[i].y);

@@ -1,2 +1,31 @@
 * add CSS :active
+
 * check browsers that need html5-shim (ie9?) excepting ie8
+
+* плавные переходы цветов
+
+-webkit-transition-property: color;
+      -moz-transition-property: color;
+        -o-transition-property: color;
+       -ms-transition-property: color;
+           transition-property: color;
+
+   -webkit-transition-duration: 1s;
+      -moz-transition-duration: 1s;
+        -o-transition-duration: 1s;
+       -ms-transition-duration: 1s;
+           transition-duration: 1s;   
+
+* Снабдить кнопки html спецсимволами (галочка, стрелочки, сердечко, etc) 
+	
+	http://copypastecharacter.com/
+	http://www.alanwood.net/unicode/dingbats.html
+
+* Полосатые таблицы (IE8 не работает)
+	table.stats tr {
+	   background: white;
+	}
+
+	table.stats tr:nth-child(odd) {
+	   background: #f4f4f4;
+	}

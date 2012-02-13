@@ -19,8 +19,8 @@ define(['Class'], function() {
         this.children = [];
         this.setParent(parent);
         if (children) {
-            for (var i in children) {
-                children.addTo(this);
+            for (var i = this.children.length;i--;) {
+                children[i].addTo(this);
             }
         }
     }
@@ -32,7 +32,7 @@ define(['Class'], function() {
             return this;
         },
         haveChild:function(node) {
-            for (var i in this.children) {
+            for (var i = this.children.length;i--;) {
                 if (this.children[i] == node) {
                     return true;
                 }
@@ -50,7 +50,7 @@ define(['Class'], function() {
         detach:function() {
             if (this.parent) {
                 var children = this.parent.children; 
-                for (var i in children) {
+                for (var i = this.children.length;i--;) {
                     if (children[i] === this) {
                         delete children[i];
                         this.parent = null;
@@ -65,7 +65,7 @@ define(['Class'], function() {
             return this.destroyChildren().detach();
         },
         destroyChildren:function() {
-            for (var i in this.children) {
+            for (var i = this.children.length;i--;) {
                 this.children[i].destroy();
             }
             return this;

@@ -1,6 +1,6 @@
 <div id="sidebar">
     <div>
-        Ходит
+        РҐРѕРґРёС‚
                 <span id="playerInfo">
 
                 </span>
@@ -11,7 +11,7 @@
 
                 </span>
     </div>
-    <input type="button" value="Закончить ход" onclick="game.nextTurn();"><br>
-    <input type="button" value="След. юнит" onclick="game.nextUnit();">
+    <input type="button" value="Р—Р°РєРѕРЅС‡РёС‚СЊ С…РѕРґ" onclick="game.nextTurn();"><br>
+    <input type="button" value="РЎР»РµРґ. СЋРЅРёС‚" onclick="game.nextUnit();">
 
 </div>

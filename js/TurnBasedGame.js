@@ -61,7 +61,7 @@ define(['Game','Class'],function(Game){
         newTurn:function(){
             this.turn++;
             var units = this.map.units;
-            for (var i in units) {
+            for (var i = units.length; i--;) {
                 units[i].onNewTurn();
             }
             this.setCurrentPlayer(this.players[0]);

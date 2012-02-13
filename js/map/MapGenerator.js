@@ -10,9 +10,7 @@ define(['map/Map'], function(Map){
             }else{
                 this.create(arguments[0]);
             }
-        }   
-        console.log('MapGenerator created:');
-        console.log(this);     
+        }           
     }
     MapGenerator.prototype = {
         create:function(mapConfig) {

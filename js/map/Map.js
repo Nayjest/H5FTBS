@@ -44,18 +44,16 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
         this._createLayer();
         this._clearCells();
         this.objects = options.objects;
-
-        for (var i in options.objects) {
+        console.log(options.objects);
+        for (var i = options.length; i--;) {
             if (!(options.objects[i] instanceof MapObject)) options.objects[i] = construct(options.objects[i]);
             options.objects[i].placeTo(this, options.objects[i].x, options.objects[i].y);
         }
-
         this.units = options.units;
 
         //MapCell selected at current moment 
-        this.selectedCell = null,
-
-            this.selectedCellHoverLayer = new DomLayer(options.selectedCellHoverLayer);
+        this.selectedCell = null;
+        this.selectedCellHoverLayer = new DomLayer(options.selectedCellHoverLayer);
         this.selectedCellHoverLayer.setSize(this.cellSize).setParent(this.layer);
         this.$infoPanel = $(options.$infoPanel);
 
@@ -97,7 +95,7 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
         getUnitsAt:function (x, y) {
             var cell;
             var units = [];
-            for (var i = this.units.length;i--;) {
+            for (var i = this.units.length; i--;) {
                 cell = this.units[i].mapCell;
                 if (cell && (cell.x == x) && (cell.y == y)) units.push(this.units[i]);
             }
@@ -110,7 +108,7 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
         getObjectsAt:function (x, y) {
             var cell;
             var objects = [];
-            for (var i = this.objects.length;i--;) {
+            for (var i = this.objects.length; i--;) {
                 cell = this.objects[i].mapCell;
                 if (cell && (cell.x == x) && (cell.y == y)) objects.push(this.objects[i]);
             }

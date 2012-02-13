@@ -20,7 +20,7 @@ define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
     Player.colors = ['red','blue','green','orange','yellow','pink','gray'];
     Player.controllers = {
         local:{type:'local'},
-        remote:{type:'remote'},
+        remote:{type:'remote'}
     }    
 
 

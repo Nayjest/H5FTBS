@@ -2,7 +2,8 @@ require(
     [
         'Mouse',
         'jquery',
-        'apps/' + window.main
+        'apps/' + window.main,
+        'lib/es5-shim/es5-shim'
     ],
     function (Mouse, $, main) {
 

@@ -1,4 +1,4 @@
-define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager, Class) {
+define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager) {
 
     var defaults = {
 
@@ -16,7 +16,7 @@ define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager
         this.animationManager = new AnimationManager();
         this.map.game = this;
         if (config.players) {
-            for (var i in config.players) {
+            for (var i = config.players.length;i--;) {
                 this.addPlayer(config.players[i]);
             }
         }

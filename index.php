@@ -16,12 +16,13 @@
                 'jquery.tmpl':'lib/jquery-tmpl/jquery.tmpl.min'
             },
             //only for dev mode to disable browser caching. if you need to add breakpoints in Chrome debug, disable it
+            // @todo This makes js files unreachable in ie developers toolbar
             urlArgs:"bust=" + (new Date()).getTime()
         }
     </script>
     <script src="/js/lib/requirejs/require.js"></script>
     <script>
-        window.main = '<?= empty($_GET)?'ftbs/play/demo1':array_pop($_GET) ?>';
+        window.main = '<?php echo empty($_GET) ? 'ftbs/play/demo1' : array_pop($_GET) ?>';
         require(['bootstrap']);
     </script>
 </head>

@@ -161,7 +161,7 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
         },      
         _clearMovesHighlight:function(){
 
-            for (var i in TbsUnit._movementHighlightLayers) {
+            for (var i = TbsUnit._movementHighlightLayers.length; i--;) {
                 TbsUnit._movementHighlightLayers[i].destroy();
             }
             TbsUnit._movementHighlightLayers= [];
@@ -174,10 +174,10 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
             var selected = this.getCellsCanMove();
             console.log('canmove to',selected);
             var l;
-            for (var i in selected) {
-                var cell = selected[i];                
-                var unit;
-                if (unit = cell.getUnits().pop()) {                    
+            for (var i = selected.length;i--;) {
+                var cell = selected[i];
+                var unit = cell.getUnits().pop();
+                if (unit) {
                     if (this.isEnemy(unit)) {
                         l = cell.createHighlightLayer('red');  
                     }  

@@ -43,7 +43,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
             if (config.map && typeof(config.x) == 'number' && typeof(config.y) == 'number') {
                 self.placeTo(config.map, config.x, config.y);
             }
-            for (var i in self._onLoad) {
+            for (var i = self._onLoad.length;i--;) {
                 self._onLoad[i](self);
             }
         });
@@ -115,7 +115,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
             var added = 0;
 
             function notSelected(mapCell) {
-                for (var i in selected) {
+                for (var i = selected.length;i--;) {
                     if (selected[i] == mapCell) return false;
                 }
                 return true;
@@ -125,9 +125,9 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
                 dist++;
                 cellsByDist[dist] = [];
                 added = 0;
-                for (var i in cellsByDist[dist - 1]) {
+                for (var i = cellsByDist[dist - 1].length;i--;) {
                     nearCells = cellsByDist[dist - 1][i].nearby();
-                    for (var j in nearCells) {
+                    for (var j = nearCells.length;j--;) {
                         if (nearCells[j] == cell) return dist;
                         if (notSelected(nearCells[j])) {
                             selected.push(nearCells[j]);
@@ -161,14 +161,14 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
             }
 
             var nearCells = this.nearby();
-            var cell;
-            for (var i in nearCells) {
+            var cell, i;
+            for (i = nearCells.length;i--;) {
                 cell = nearCells[i];
                 if (notSelected(cell) && notExcluded(cell)) {
                     selected.push(nearCells[i]);
                 }
             }
-            for (var i in nearCells) {
+            for (i = nearCells.length;i--;) {
                 if (notExcluded(nearCells[i])) nearCells[i].selectByDistance(distance - 1, selected, excludeCells);
             }
             return selected;
@@ -177,7 +177,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
 
         _setupLayer:function () {
             this.layer
-                .setParent(this.map.layer)
+                .setParent(this.map.layer);
             //.setSize(this.map.cellSize);
             this._setupLayerOffset();
             return this;

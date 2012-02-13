@@ -59,7 +59,10 @@ define([], function() {
     * @attribute config string
     */
     construct = function(config) {
-        var _class = config._class;    
+        var _class = config._class;
+        if (_class == undefined) {
+            throw new Error('Can\'t initiate object of unknown class. Set "_class" property correctly.');
+        }
         if (typeof _class == 'string') {
             _class = window[_class];
         }

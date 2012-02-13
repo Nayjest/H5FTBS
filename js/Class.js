@@ -2,6 +2,7 @@
 * Class utils module
 */
 define([], function() {
+	//"use strict";
     var global = this;
     /**
     * 
@@ -28,7 +29,7 @@ define([], function() {
     
     merge(Function.prototype, {
         // Универсальная функция наследования
-        inheritsFrom:function(superClass) {
+        inheritsFrom:function(superClass) {		
             // Если передавать superClass строкой, то можно реализовать асинхронную загрузку файла с superClass и привязывать его к текущему классу уже после загрузки
             if (typeof superClass == 'string') {
                 superClass = global[superClass];
@@ -44,7 +45,7 @@ define([], function() {
             });
             return this;
         },
-        extendProto:function() {
+        extendProto:function() {			
             for (var i=0; i<arguments.length; i++){
                 merge(this.prototype,arguments[i]);	 
             }
@@ -58,7 +59,7 @@ define([], function() {
     * Create object by config
     * @attribute config string
     */
-    construct = function(config) {
+    var construct = function(config) {
         var _class = config._class;
         if (_class == undefined) {
             throw new Error('Can\'t initiate object of unknown class. Set "_class" property correctly.');

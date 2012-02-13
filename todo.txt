@@ -1,0 +1,2 @@
+* add CSS :active
+* check browsers that need html5-shim (ie9?) excepting ie8

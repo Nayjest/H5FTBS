@@ -1,3 +1,5 @@
+* Strict mode
+
 * add CSS :active
 
 * check browsers that need html5-shim (ie9?) excepting ie8
@@ -29,3 +31,5 @@
 	table.stats tr:nth-child(odd) {
 	   background: #f4f4f4;
 	}
+
+* Сделать, чтобы СanvasEventHandler проходил только по элементам, для которых назначены обработчики событий (добавлять канвасЛайер в список только при назначении .on(evt,callback), подумать по поводу иерархии лейеров и событий)

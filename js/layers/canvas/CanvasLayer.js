@@ -1,7 +1,7 @@
 /**
  *  module CanvasLayer
  */
-define(['layers/AbstractLayer', 'Canvas', 'jquery', 'Loadable'], function (AbstractLayer, Canvas, $) {
+define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/ 'jquery', 'Loadable'], function (AbstractLayer, Canvas, /*CanvasLayerEvents,*/ $) {
 
     // radians in one degree
     var radInDeg = Math.PI / 180;
@@ -121,7 +121,7 @@ define(['layers/AbstractLayer', 'Canvas', 'jquery', 'Loadable'], function (Abstr
         }
 
     });
-    Me.instances = {};
+    Me.instances = [];
 
     return Me;
 

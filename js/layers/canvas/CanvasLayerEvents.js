@@ -1,7 +1,7 @@
 /**
  *  module CanvasLayerEvents
  */
-define(['jquery', 'Mouse', 'Loadable'], function ($, Mouse) {
+define(['jquery', 'Mouse', 'layers/canvas/CanvasLayer', 'Loadable'], function ($, Mouse, CanvasLayer) {
 
     var _id = 0;
 
@@ -10,14 +10,14 @@ define(['jquery', 'Mouse', 'Loadable'], function ($, Mouse) {
         this._id = _id;
         _id++;
     }
+
     var Me = CanvasLayerEvents;
-    canvasLayerEvents.prototype = {
+    CanvasLayerEvents.prototype = {
         destroy:function () {
             //return;
             if (Me.instances[this._id]) delete(Me.instances[this._id]);
             Me.superProto.destroy.call(this);
         },
-
         on:function (eventName, handler) {
             var callbacks = this._eventHandlers[eventName];
             if (!callbacks) {
@@ -36,33 +36,40 @@ define(['jquery', 'Mouse', 'Loadable'], function ($, Mouse) {
     };
     Me.instances = {};
 
-    var lp, mp, l, layers, args;
-    $('body').on('mousemove', function () {
-        console.log(Me.instances);
-        layers = Me.instances;
+    var lp, //position of iterated layer
+        mp, //current mouse position
+        l, //current layer
+        layers, //all layer
+        args; //arguments passed to callback @todo make it compatible with DOM/jquery events, pass same data
+    $('body').on('mousemove mousedown mouseup click', function (event) {
+        layers = CanvasLayer.instances;
         mp = Mouse.pos;
-        for (var i in layers) {
-            if (layers[i].visible) {
-                l = layers[i];
-                lp = l.getScreenPos();
-                args = [mp];
-                if (
-                    (mp[0] > lp[0])
-                        && (mp[0] < lp[0] + layers[i].size[0])
-                        && (mp[1] > lp[1])
-                        && (mp[1] < lp[1] + layers[i].size[1])
-                    ) {
-
-                    l.fireEvent('mousemove', args);
-                    if (!l._isHovered) {
-                    }
-                    l._isHovered = true;
-                    l.fireEvent('mouseover', args)
-                } else if (l._isHovered) {
-                    l._isHovered = false;
-                    l.fireEvent('mouseout', args);
-                }
+        for (var i = layers.length; i--;) {
+            if (!(layers[i] && layers[i].visible)) {
+                continue;
             }
+            l = layers[i];
+            lp = l.getScreenPos();
+            args = [mp];
+            if (// mouse inside element
+                (mp[0] > lp[0])
+                    && (mp[0] < lp[0] + layers[i].size[0])
+                    && (mp[1] > lp[1])
+                    && (mp[1] < lp[1] + layers[i].size[1])
+                ) {
+                if (event.type === 'mousemove') {
+                    if (!l._isHovered) {
+                        l._isHovered = true;
+                        l.fireEvent('mouseover', args);
+                    }
+                }
+                l.fireEvent(event.type, args);
+
+            } else if (l._isHovered) { //mouse outside and obj.isHovered
+                l._isHovered = false;
+                l.fireEvent('mouseout', args);
+            }
+
         }
     });
 

@@ -1,14 +1,16 @@
 if (!this.env) env = {};
 env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
 define(
-    ['layers/canvas/CanvasLayer', 'widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'Mouse', 'jquery'],
+    ['layers/canvas/CanvasLayer', 'widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'Mouse', 'jquery', 'layers/canvas/CanvasLayerEvents'],
     function (CanvasLayer, sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, Mouse, $) {
         var putCell = function (srcCell, targetCell) {
             if (!srcCell || !targetCell) return;
             if (srcCell instanceof MapCell) {
-                srcCell.placeTo(map, targetCell.x, targetCell.y).update();
+                srcCell.placeTo(map, targetCell.x, targetCell.y);
+                //srcCell.layer.update();
                 return;
             } else {
+                console.log('put ', srcCell, ' to ', targetCell.x, ':', targetCell.y);
                 Gex.load(
                     'map/cell/gex/' + srcCell,
                     function (cell) {
@@ -26,40 +28,21 @@ define(
             $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
                 map.$infoPanel = $('#mapInfo')
             });
-
+            map.cells.forEach(function (row) {
+                row.forEach(function (cell) {
+                    cell.onLoad(function () {
+                        cell.layer.on('click', function () {
+                            console.log('direct cell click');
+                            putCell($('#cell').val(), map.selectedCell);
+                        });
+                    });
+//
+                });
+            })
             map.layer.on('click', function () {
+                console.log('map.layer.click');
                 putCell($('#cell').val(), map.selectedCell);
             });
-
-            var lp, mp, l, layers, args;
-            $('body').on('mousemove', function () {
-                console.log(CanvasLayer.instances);
-                layers = CanvasLayer.instances;
-                mp = Mouse.pos;
-                for (var i in layers) {
-                    if (layers[i].visible) {
-                        l = layers[i];
-                        lp = l.getScreenPos();
-                        args = [mp];
-                        if (
-                            (mp[0] > lp[0])
-                                && (mp[0] < lp[0] + layers[i].size[0])
-                                && (mp[1] > lp[1])
-                                && (mp[1] < lp[1] + layers[i].size[1])
-                            ) {
-
-                                l.fireEvent('mousemove',args);
-                                if (!l._isHovered) {}
-                                l._isHovered = true;
-                                l.fireEvent('mouseover',args)
-                        } else if (l._isHovered) {
-                            l._isHovered = false;
-                            l.fireEvent('mouseout',args);
-                        }
-                    }
-                }
-            });
-
         }
     }
 )

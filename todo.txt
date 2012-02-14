@@ -43,3 +43,5 @@
 *Bug: После правильной реализации Node.detach() подсветка ячеек карты для ходов перестала работать, ранее Node.detach() из-за ошибки ничего не делала
 
 *Bug: после убийства юнита при попытке подсветить ходы для других юнитов: Uncaught TypeError: Cannot read property 'mapCell' of undefined Map:112, before MapCell:112, Before:TbsUnit:123
+
+*Unit tests for JS

@@ -37,3 +37,9 @@
 * Fix bug with module system: error when make Gex not global (maby I need to implement class loading via require.js in Loading.js)
 
 * Проблемка: Utils нельзя сделать НЕ глобальной переменной, т.к. иначе при загрузке js файлов чере Loadable объект не доступен
+
+*zIndex для отрисовки через Канвас
+
+*Bug: После правильной реализации Node.detach() подсветка ячеек карты для ходов перестала работать, ранее Node.detach() из-за ошибки ничего не делала
+
+*Bug: после убийства юнита при попытке подсветить ходы для других юнитов: Uncaught TypeError: Cannot read property 'mapCell' of undefined Map:112, before MapCell:112, Before:TbsUnit:123

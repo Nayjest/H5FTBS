@@ -3,8 +3,9 @@ var Loop = function (delay){
 	var _status = Loop.STATUS_STOP;
 	var _interval;
 	var _instructions = [];
+    var i;
 	this.run = function(){
-		for (i in _instructions) {
+		for (i = _instructions.length;i--;) {
 			_instructions[i]();	
 		}
 	}

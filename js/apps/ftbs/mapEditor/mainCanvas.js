@@ -20,13 +20,16 @@ define(
             }
 
         }
+        var putCellHandler = function () {
+            putCell($('#cell').val(), map.selectedCell);
+        }
 
 
         return function () {
 
             map = MapGenerator.create({size:[5, 5], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
             $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
-                map.$infoPanel = $('#mapInfo')
+                map.$infoPanel = $('#mapInfo');
             });
             map.cells.forEach(function (row) {
                 row.forEach(function (cell) {
@@ -34,15 +37,16 @@ define(
                         cell.layer.on('click', function () {
                             console.log('direct cell click');
                             putCell($('#cell').val(), map.selectedCell);
+                            cell.layer.onLoad(function () {
+                                cell.layer.on('click', putCellHandler);
+                            });
+
                         });
                     });
 //
                 });
             })
-            map.layer.on('click', function () {
-                console.log('map.layer.click');
-                putCell($('#cell').val(), map.selectedCell);
-            });
+            map.layer.on('click', putCellHandler);
         }
     }
 )

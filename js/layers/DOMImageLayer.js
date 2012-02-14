@@ -1,5 +1,5 @@
 /**
- *  module
+ *  module DomImageLayer
  */
 define(['layers/DomLayer', 'Loadable'], function (DomLayer) {
 

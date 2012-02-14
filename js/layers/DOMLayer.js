@@ -10,10 +10,14 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
         var options = {
             css:{ border:'1px dotted gray' },
             attr:{},
-            tag:'div'
+            tag:'div',
+            zIndex:0
         };
         if (config) merge(options, config);
         var $el = this.$el = config.$el || $('<' + options.tag + '/>');
+        if (options.zIndex) {
+            options.css.zIndex = options.zIndex;
+        }
         $el.get(0).ownerLayer = this;
         $el.css(options.css);
         $el.attr(options.attr);

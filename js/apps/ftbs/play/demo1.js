@@ -34,7 +34,8 @@ define(
                 maxMoves:4,
                 layer:{
                     image:'/img/units/Elvish_archer/ea1.png',
-                    size:[52, 80]
+                    size:[52, 80],
+                    zIndex:60
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
             u3.onLoad(function(me){console.log('ok',me); me.layer.update();});

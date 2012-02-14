@@ -11,7 +11,7 @@ define(['Node', 'Class'], function (Node) {
             /* offset in pixels */
             offset:[0, 0],
             angle:0,
-            zoom:1
+            zoom:1,
         });
         Node.call(this, config.parent, config.children);
     }

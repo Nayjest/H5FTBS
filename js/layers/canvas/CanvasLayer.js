@@ -28,7 +28,7 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
 
     //define as CanvasLayer for better class detection in Chrome
     var CanvasLayer = function (config) {
-        var options = glob.merge({}, config);
+        var options = glob.merge({zIndex:1}, config);
         glob.mergeUndefined(options, defaults);
         Me.superClass.call(this, options);
         this.setCanvas(options.canvas);
@@ -76,10 +76,11 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
             this.update();
             return this;
         },
+        //draw layer with all children
         update:function () {
+            this.draw();
             // @todo return CanvasLayer.superProto.update.apply(this,Array.prototype.splice.call(arguments,0));
             Me.superProto.update.call(this);
-            this.draw();
             return this;
         },
         setParent:function (parent) {
@@ -126,6 +127,15 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
 
     });
     Me.instances = [];
+    /**
+     * Sort layers by zIndex for drawing
+     * @param Array[CanvasLayer] layers
+     */
+    Me.sortByZIndex = function(layers) {
+        return layers.sort(function(a,b){
+            return a.zIndex - b.zIndex;
+        });
+    }
 
     return Me;
 

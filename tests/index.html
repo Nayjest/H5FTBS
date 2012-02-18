@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Test Suite</title>
+    <link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+    <script type="text/javascript" src="qunit/qunit.js"></script>
+    <script>
+        //configure loader
+        var require = {
+            baseUrl:'/js',
+            paths:{
+                'jquery':'lib/jquery/jquery-1.7.1.min',
+                'jquery.tmpl':'lib/jquery-tmpl/jquery.tmpl.min',
+                'tests':'/tests'
+            },
+            //only for dev mode to disable browser caching. if you need to add breakpoints in Chrome debug, disable it
+            // @todo This makes js files unreachable in ie developers toolbar
+            urlArgs:"bust=" + (new Date()).getTime()
+        }
+    </script>
+    <script src="/js/lib/requirejs/require.js"></script>
+    <script>
+        require(['tests/main']);
+    </script>
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture">test markup</div>
+</body>
+</html>

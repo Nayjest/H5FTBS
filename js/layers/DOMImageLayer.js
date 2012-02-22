@@ -21,7 +21,8 @@ define(['layers/DomLayer', 'Loadable'], function (DomLayer) {
             zIndex:99999,
             position:'absolute',
             border:'none',
-            outline:'none'
+            outline:'none',
+            backgroundRepeat:'no-repeat'
         });
         if (options.attr['class'] === undefined) options.attr['class'] = 'noselect';
         Me.superClass.call(this, options);
@@ -47,6 +48,9 @@ define(['layers/DomLayer', 'Loadable'], function (DomLayer) {
         setFit:function (fit) {
             if (!_fitCss[fit]) throw new Error('Unsupported DomImageLayer fit type.');
             this.$el.css({backgroundSize:_fitCss[fit]});
+            if (fit==Me.fit.COVER) {
+                this.$el.css({backgroundRepeat:'repeat'});
+            }
             this.fit = fit;
         },
         /**

@@ -1,5 +1,5 @@
 define(
-    ['widgets/sidebar/sidebar','map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
+    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
     function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $) {
         return function () {
 
@@ -20,6 +20,10 @@ define(
                 u2 = u.placeTo(map, 1, 3).setPlayer(1);
             });
 
+            TbsUnit.load('unit/rat/shaman/shaman', function (u) {
+                u4 = u.placeTo(map, 6, 3).setPlayer(2);
+            });
+
 
             stone = new MapObject({
                 passable:false,
@@ -38,7 +42,10 @@ define(
                     zIndex:60
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
-            u3.onLoad(function(me){console.log('ok',me); me.layer.update();});
+            u3.onLoad(function (me) {
+                console.log('ok', me);
+                me.layer.update();
+            });
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

@@ -1,4 +1,4 @@
-define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObject, DomLayer, $) {
+define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Class'], function (MapObject, DomLayer, ImageLayer, $) {
 
     // Terrain levels for drawing order
     var zLevels = {
@@ -20,16 +20,9 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
     var defaults = {
         size:[10, 10], //size in cells
         cellSize:[74, 64], // cell sizein pixels
-        selectedCellHoverLayer:{ // config of layer that is drawed when 
-            tag:'img',
-            attr:{
-                'class':'noselect',
-                src:'/img/cursor/gex.png'
-            },
-            css:{
-                display:'none',
-                zIndex:zLevels.mapCellHighlight
-            }
+        selectedCellHoverLayer:{ // config of layer that is drawed when
+            image:'/img/cursor/gex.png',
+            zIndex:zLevels.mapCellHighlight
         },
         $infoPanel:'#mapInfo', // jquery object that represents dom element of info panel
         objects:[], // configuration or instances of map objects
@@ -52,7 +45,7 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
 
         //MapCell selected at current moment 
         this.selectedCell = null;
-        this.selectedCellHoverLayer = new DomLayer(options.selectedCellHoverLayer);
+        this.selectedCellHoverLayer = new ImageLayer(options.selectedCellHoverLayer);
         this.selectedCellHoverLayer.setSize(this.cellSize).setParent(this.layer);
         this.$infoPanel = $(options.$infoPanel);
 
@@ -113,6 +106,15 @@ define(['map/MapObject', 'layers/DomLayer', 'jquery', 'Class'], function (MapObj
                 if (cell && (cell.x == x) && (cell.y == y)) objects.push(this.objects[i]);
             }
             return objects;
+        },
+
+        export:function(){
+            var config = {};
+            for(var i in this) {
+                if (this.hasOwnProperty(i)) {
+                    config[i]=this[i];
+                }
+            }
         }
     }
 

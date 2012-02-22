@@ -2,7 +2,7 @@ define([], function () {
     "use strict";
     //Best way to get global object (window in browser) in strict mode
     var FN = Function, glob = FN('return this')();
-    var Me = glob.Utils = {};
+    var Me = glob.Utils = glob.utils = {};
 
     /**
      * Usage: Utils.rndInt(1,12)  or Utils.rndInt([1,12])
@@ -32,4 +32,3 @@ define([], function () {
 
     return Me;
 });
-   

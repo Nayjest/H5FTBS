@@ -20,15 +20,8 @@
             urlArgs:"bust=" + (new Date()).getTime()
         }
     </script>
-    <script src="/js/lib/requirejs/require.js"></script>
-    <script>
-        window.main = '<?php echo empty($_GET) ? 'ftbs/play/demo1' : array_pop($_GET) ?>';
-        require(['bootstrap']);
-    </script>
+    <script data-main="bootstrap" src="/js/lib/requirejs/require.js"></script>
 </head>
-
 <body id="body">
-
-
 </body>
 </html>

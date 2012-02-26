@@ -11,12 +11,21 @@ define(['Node', 'Class'], function (Node) {
             /* offset in pixels */
             offset:[0, 0],
             angle:0,
-            zoom:1,
+            zoom:1
         });
+        this.setZIndex(config.zIndex?config.zIndex:1);
         Node.call(this, config.parent, config.children);
     }
 
     Me.extendProto(Node.prototype, {
+
+        /**
+         *
+         * @param int zIndex
+         */
+        setZIndex: function(zIndex) {
+            this.zIndex = zIndex;
+        },
 
         /**
          * Update layer on the screen

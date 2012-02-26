@@ -1,0 +1,6 @@
+CACHE MANIFEST
+#version: 1.0
+/js/lib/jquery/jquery-1.7.1.min.js
+/js/lib/requirejs/require.js
+NETWORK:
+*

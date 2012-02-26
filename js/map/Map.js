@@ -30,7 +30,8 @@ define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Clas
     }
 
     Map = function (config) {
-        var options = merge({}, config);
+        var options = merge({}, config),
+            me = this;
         mergeUndefined(options, defaults);
         this.size = options.size;
         this.cellSize = options.cellSize;
@@ -46,7 +47,11 @@ define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Clas
         //MapCell selected at current moment 
         this.selectedCell = null;
         this.selectedCellHoverLayer = new ImageLayer(options.selectedCellHoverLayer);
-        this.selectedCellHoverLayer.setSize(this.cellSize).setParent(this.layer);
+        this.selectedCellHoverLayer.onLoad(function(){
+            console.log(me.selectedCellHoverLayer);
+            me.selectedCellHoverLayer.setSize(me.cellSize);
+            me.selectedCellHoverLayer.setParent(me.layer);
+        })
         this.$infoPanel = $(options.$infoPanel);
 
     }

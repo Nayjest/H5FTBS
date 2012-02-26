@@ -39,12 +39,11 @@ define(
                 layer:{
                     image:'/img/units/Elvish_archer/ea1.png',
                     size:[52, 80],
-                    zIndex:60
+                    zIndex:600
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
-            u3.onLoad(function (me) {
-                console.log('ok', me);
-                me.layer.update();
+            u3.layer.onLoad(function () {
+                u3.layer.update();
             });
 
             //    var unit2 = new DomLayer({

@@ -27,6 +27,12 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
     }
     var Me = DomLayer.inheritsFrom(AbstractLayer).extendProto(JqueryEventsMixin, {
 
+        setZIndex: function(zIndex) {
+            Me.superProto.setZIndex.call(this, zIndex);
+            this.$el.css('z-index',zIndex);
+            return this;
+        },
+
         calcDOMOffset:function () {
 
             var parentOffset = this.$parentEl.offset();

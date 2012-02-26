@@ -1,8 +1,19 @@
 if (!this.env) env = {};
-define(
-    [
-        env.imageLayerClass ? env.imageLayerClass : 'layers/DomImageLayer'//'layers/canvas/CanvasImageLayer'
-    ],
+//if (!env.imageLayerClass) env.imageLayerClass = 'layers/DomImageLayer';
+if (!env.imageLayerClass) env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
+var dependencies= []
+if (env.imageLayerClass === 'layers/canvas/CanvasImageLayer') {
+    dependencies = [
+        env.imageLayerClass,
+        'layers/canvas/DrawManager',
+        'layers/canvas/CanvasLayerEvents'
+    ];
+
+} else {
+    dependencies = [env.imageLayerClass]
+}
+define(dependencies,
     function (ImageLayer) {
         return ImageLayer;
-    });
+    }
+);

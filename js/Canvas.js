@@ -21,6 +21,7 @@ define([], function () {
             this.domElement = G_vmlCanvasManager.initElement(c.domElement);
         }
         this.context = this.domElement.getContext("2d");
+        this.id = Canvas.instances.length;
         Canvas.instances.push(this);
     }
     Canvas.instances = [];
@@ -28,6 +29,9 @@ define([], function () {
     Canvas.prototype = {
         clear:function () {
             this.context.clearRect(0, 0, this.size[0], this.size[1]);
+        },
+        destroy:function(){
+            Canvas.instances.splice(this.id,1);
         }
     }
     return Canvas;

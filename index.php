@@ -1,9 +1,20 @@
 <!DOCTYPE HTML>
-<html>
+<!-- appcache manifest for offline work @todo finish manifest -->
+<html  manifest="/h5game.manifest">
 <head>
     <title>Canvas test</title>
+    <!-- This will make the page be displayed properly on iphone and android devices. -->
+    <!--
+    @todo errors in chrome
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    -->
+
+    <!--
+    Icon for iPhone/Android (png, 57x57)
+    <link rel="apple-touch-icon" href="/customIcon.png"/>
+    -->
+
     <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <?php // <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script> ?>
     <!--[if IE]>
     <script type="text/javascript" src="js/lib/excanvas/excanvas.compiled.js"></script>
     <![endif]-->

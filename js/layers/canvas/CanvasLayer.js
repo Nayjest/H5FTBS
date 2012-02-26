@@ -8,12 +8,12 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
 
     // radians in one degree
     var radInDeg = Math.PI / 180;
-    // instance counter
+    // instances counter
     var _id = 0;
     var defaults = {
         visible:true,
         drawMethod:function () {
-            throw new Error('CanvasLayer is abstract class it can not be drawn');
+            throw new Error('CanvasLayer is abstract class it can not be drawn.');
         }
     }
 
@@ -35,12 +35,12 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
         this._eventHandlers = [];
         //save link to instance
         Me.instances[_id] = this;
-        this._id = _id;
+        this.id = _id;
         _id++;
     }
     var Me = CanvasLayer.inheritsFrom(AbstractLayer).extendProto({
         draw:function () {
-            if (this.visible) this.drawMethod.call(this);
+            if (this.visible) this.drawMethod();
         },
         getAbsoluteOffset:function () {
             var offset = Me.superProto.getAbsoluteOffset.call(this);
@@ -51,10 +51,15 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
             offset[1] += ~~$('body').height() / 2;
             return offset;
         },
+        /**
+         *
+         * @param Canvas canvas
+         */
         setCanvas:function (canvas) {
             if (!canvas) canvas = _getDefaultCanvas();
             this.canvas = canvas;
             this.ctx = canvas.context;
+            return this;
         },
         setOffset:function (offset) {
             this.offset = offset.slice(0);
@@ -93,7 +98,7 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
         },
         destroy:function () {
             //return;
-            if (Me.instances[this._id]) delete(Me.instances[this._id]);
+            if (Me.instances[this.id]) delete(Me.instances[this.id]);
             Me.superProto.destroy.call(this);
         },
 
@@ -110,6 +115,11 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
             var pos = this.getScreenPos();
             return [pos[0] + ~~(this.size[0] / 2), pos[1] + ~~(this.size[1] / 2)];
         },
+        /**
+         *
+         * @param string eventName
+         * @param function handler
+         */
         on:function (eventName, handler) {
             var callbacks = this._eventHandlers[eventName];
             if (!callbacks) {

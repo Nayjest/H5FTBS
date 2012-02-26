@@ -1,7 +1,7 @@
 require(
     ['url', 'debug/GlobalizeModules'],
     function (url, GlobalizeModules) {
-        // @todo remove in production
+        // @todo remove in production, move to url router
         if (url.getParams('glob')) {
             GlobalizeModules.start();
         }
@@ -10,13 +10,14 @@ require(
         require(['Mouse', 'jquery', 'apps/' + route, 'lib/es5-shim/es5-shim'], function (Mouse, $, main) {
             $(document).ready(function () {
                 // prevent selecting
-                $('.noselect, #area *').live('selectstart dragstart', function (evt) {
+                $('.noselect, canvas, body').live('selectstart dragstart', function (evt) {
                     evt.preventDefault();
                     return false;
                 });
 
                 main();
 
+                // @todo move event handlers to new MapLayer class
                 $('body').click(function (e) {
                     if (e.srcElement == $('body').get(0)) {
                         map.selectCell(null);

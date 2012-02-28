@@ -1,5 +1,4 @@
-define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $, Utils) {
-
+define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', 'map/MapCellLayer'], function (ImageLayer, Highlight, $, Utils, MapCellLayer) {
     var mapCellTypes = {
         road:0,
         plane:{
@@ -17,13 +16,12 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
         ice:8,
         lava:9,
         wall:10
-    }
+    },
 
-    var defaults = {
+    defaults = {
         type:mapCellTypes.plane,
         layer:{}
-    }
-
+    },
     MapCell = function (config) {
         var self = this;
         this._onLoad = [];
@@ -32,9 +30,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
         if (this.map) {
             this.map.cells[this.x][this.y] = this;
         }
-        ImageLayer.load(this.layer, function (obj) {
-
-            obj.highlight = new Highlight(obj, {});
+        MapCellLayer.load(this.layer, function (obj) {
             obj.on('mouseover', function (e) {
                 self.map.selectCell(self);
             });

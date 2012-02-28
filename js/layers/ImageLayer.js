@@ -1,6 +1,6 @@
 if (!this.env) env = {};
-//if (!env.imageLayerClass) env.imageLayerClass = 'layers/DomImageLayer';
-if (!env.imageLayerClass) env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
+if (!env.imageLayerClass) env.imageLayerClass = 'layers/DomImageLayer';
+//if (!env.imageLayerClass) env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
 var dependencies= []
 if (env.imageLayerClass === 'layers/canvas/CanvasImageLayer') {
     dependencies = [

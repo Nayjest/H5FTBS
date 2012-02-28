@@ -130,6 +130,7 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
             Me.superProto.setSize.call(this, size);
         }
     });
-
+    // for detecting what implementation (Dom or Canvas)is used for displaying images
+    Me.isCanvasEngine = true;
     return CanvasImageLayer;
 });

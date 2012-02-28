@@ -57,7 +57,6 @@ define(['jquery', 'Mouse', 'layers/canvas/CanvasLayer', 'Loadable'], function ($
                     && (mp[1] > lp[1])
                     && (mp[1] < lp[1] + layers[i].size[1])
                 ) {
-                // emulate mouseover
                 if (event.type === 'mousemove') {
                     if (!l._isHovered) {
                         l._isHovered = true;
@@ -65,7 +64,7 @@ define(['jquery', 'Mouse', 'layers/canvas/CanvasLayer', 'Loadable'], function ($
                     }
                 }
                 l.fireEvent(event.type, args);
-            // emulate mouseout
+
             } else if (l._isHovered) { //mouse outside and obj.isHovered
                 l._isHovered = false;
                 l.fireEvent('mouseout', args);

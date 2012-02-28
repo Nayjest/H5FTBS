@@ -3,8 +3,7 @@
  */
 define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
 
-    var layers = [],
-        _canvasesToRedraw = {},
+    var _canvasesToRedraw = {},
         undefined;
 
     var drawList = new (function () {
@@ -131,14 +130,15 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
     function redraw() {
         for (var i in _canvasesToRedraw) {
             if (_canvasesToRedraw.hasOwnProperty(i) && _canvasesToRedraw[i]) {
-                //console.log('redraw canvas ',i);
                 drawList.draw(i);
+                _canvasesToRedraw[i] = false;
+
             }
         }
     }
 
     function startLoop() {
-        setInterval(redraw, 10);
+        setInterval(redraw, 30);
     }
 
     var DrawManager = {

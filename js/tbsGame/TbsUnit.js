@@ -152,7 +152,7 @@ define(['map/Unit', 'Utils'], function(Unit, Utils){
             this._highlightMoves();
             return this;
         },                 
-        select:function(){                        
+        select:function(){
             var selectedUnit = this.map.game.selectedUnit;
             if (selectedUnit && selectedUnit.canAttack(this)) {
                 // Dont select unit when attack

@@ -29,7 +29,6 @@ define(['layers/ImageLayer', 'Loadable'], function(ImageLayer){
         mergeUndefined(this,defaults);
 
         ImageLayer.load(this.layer,function(layer){
-
             layer.on('click',function(){
                self.select(self.map.game.currentPlayer);
             });
@@ -77,7 +76,7 @@ define(['layers/ImageLayer', 'Loadable'], function(ImageLayer){
           this.layer.destroy();
         },
         select:function(){
-
+            console.log('selected!');
         },
 
         getInfo:function(){

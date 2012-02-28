@@ -1,47 +1,57 @@
 /**
-* Animation Manager class
-*/
-define(['Class'], function(){
-    
+ * Animation Manager class
+ */
+define(['Class'], function () {
+
     var defaults = {
-        delay: 1,   
+        delay:30,
+        speed:4
     }
-    
-    AnimationManager = function(config){
+
+    AnimationManager = function (config) {
         if (!config) config = {};
         if (config) mergeUndefined(this, config);
         mergeUndefined(this, defaults);
-        
+
     }
-    
+
     AnimationManager.prototype = {
-       move: function(layer, targetOffset, speed){           
-           var delay = this.delay;
-           var doMove = function() {
-             var finished = false;
-             if (layer.offset[0]<targetOffset[0]-1)  {                 
-                 layer.offset[0]++;
-             } else if (layer.offset[0]>targetOffset[0]+1) {
-                 layer.offset[0]--;
-             } else {
-                 finished = true;
-             }
-             
-             if (layer.offset[1]<targetOffset[1]-1)  {                 
-                 layer.offset[1]++;
-             } else if (layer.offset[1]>targetOffset[1]+1) {
-                 layer.offset[1]--;
-             } else {
-                 if (finished) {
-                     layer.update();
-                     return true;   
-                 }
-             }
-             layer.update();
-             setTimeout(doMove, delay);
-           }
-           setTimeout(doMove, delay);
-       }
+        move:function (layer, targetOffset, speed) {
+            var delay = this.delay,
+                speed = this.speed,
+                intervalId,
+                offset = layer.offset,
+                finished = false,
+                x,y,
+                targetX = targetOffset[0],
+                targetY = targetOffset[1],
+                doMove = function () {
+                    finished = false,
+                    x = offset[0];
+                    y = offset[1];
+                    if (x < targetX - speed) {
+                        offset[0]+=speed;
+                    } else if (x > targetX + speed) {
+                        offset[0]-=speed;
+                    } else {
+                        finished = true;
+                    }
+
+                    if (y < targetY - speed) {
+                        offset[1]+=speed;
+                    } else if (y > targetY + speed) {
+                        offset[1]-=speed;
+                    } else {
+                        if (finished) {
+                            layer.update();
+                            clearInterval(intervalId);
+                        }
+                    }
+                    layer.update();
+
+                }
+            intervalId = setInterval(doMove, delay);
+        }
     }
 
     return AnimationManager;

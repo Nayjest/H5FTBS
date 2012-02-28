@@ -17,15 +17,6 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
         }
     }
 
-    var _getDefaultCanvas = function () {
-        if (glob.canvas) return glob.canvas;
-        return glob.canvas = new Canvas({
-            size:[$('body').width(), $('body').height()],
-            id:'canvas',
-            containerId:'body'
-        });
-    }
-
     //define as CanvasLayer for better class detection in Chrome
     var CanvasLayer = function (config) {
         var options = glob.merge({zIndex:1}, config);
@@ -56,7 +47,7 @@ define(['layers/AbstractLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/
          * @param Canvas canvas
          */
         setCanvas:function (canvas) {
-            if (!canvas) canvas = _getDefaultCanvas();
+            if (!canvas) canvas = Canvas.getDefault();
             this.canvas = canvas;
             this.ctx = canvas.context;
             return this;

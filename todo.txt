@@ -49,3 +49,5 @@
 * Make game work offline http://hernan.amiune.com/teaching/HTML5-Game-Development-Tips.html
 
 *make appcache manifest generator
+
+* Проблемы с режимом fit в старом фаерфоксе

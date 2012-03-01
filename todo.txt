@@ -51,3 +51,7 @@
 *make appcache manifest generator
 
 * Проблемы с режимом fit в старом фаерфоксе
+
+* Javascript canvas pixel debug
+
+* Implement func. decorators (append, prepend), draw/filter function transformArgs

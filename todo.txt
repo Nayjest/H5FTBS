@@ -55,3 +55,7 @@
 * Javascript canvas pixel debug
 
 * Implement func. decorators (append, prepend), draw/filter function transformArgs
+
+* Implement mouseover detection considering gex geometry
+
+* Move common part of code in MapCell & MapObject to some base class (BaseObject?)

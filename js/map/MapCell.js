@@ -39,9 +39,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
             if (config.map && typeof(config.x) == 'number' && typeof(config.y) == 'number') {
                 self.placeTo(config.map, config.x, config.y);
             }
-            for (var i = self._onLoad.length;i--;) {
-                self._onLoad[i](self);
-            }
+            self._doOnLoad();
         });
     }
 
@@ -51,6 +49,14 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
     MapCell.descriptions[MapCell.types.plane] = 'Равнина';
 
     MapCell.prototype = {
+        /**
+         * Execute onload handlers
+         */
+        _doOnLoad:function () {
+            for (var i = 0 ; i<this._onLoad.length;i++) {
+                this._onLoad[i](this);
+            }
+        },
         placeTo:function (map, x, y) {
             var me = this;
             me.map = map;

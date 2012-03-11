@@ -1,7 +1,7 @@
 /**
  * Animation Manager class
  */
-define(['Class'], function () {
+define(['jquery','Class'], function ($) {
 
     var defaults = {
         delay:30,
@@ -25,6 +25,7 @@ define(['Class'], function () {
                 x,y,
                 targetX = targetOffset[0],
                 targetY = targetOffset[1],
+                deferred = $.Deferred(),
                 doMove = function () {
                     finished = false,
                     x = offset[0];
@@ -44,13 +45,14 @@ define(['Class'], function () {
                     } else {
                         if (finished) {
                             layer.update();
+                            deferred.resolve();
                             clearInterval(intervalId);
                         }
                     }
                     layer.update();
-
                 }
             intervalId = setInterval(doMove, delay);
+            return deferred.promise();
         }
     }
 

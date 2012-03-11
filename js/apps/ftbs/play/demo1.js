@@ -1,6 +1,6 @@
 define(
-    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery', 'canvas/draw', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer'],
-    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $, draw, canvasUtils, utils, CanvasLayer) {
+    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/bootstrap'],
+    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $, canvasUtils, utils, CanvasLayer) {
         return function () {
 
             map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
@@ -12,29 +12,6 @@ define(
                     new Player
                 ]
             });
-
-            (function addShadows(Target){
-                var doOnLoad = Target.prototype._doOnLoad;
-                Target.prototype._doOnLoad = function(me) {
-                    doOnLoad.call(this);
-                    var shadow = new CanvasLayer({
-                        parent:this.layer,
-                        canvas:this.layer.canvas,
-                        offset:[0,~~(this.layer.size[1]/2)],
-                        drawMethod:function(){
-                            var offset = this.getAbsoluteOffset();
-                            var w = this.size[0]/2;
-                            var h = this.size[1]/2;
-                            var x = offset[0] - w/2;
-                            var y = offset[1] - h/2;
-
-                            draw.shadow(this.ctx,x,y,w,h);
-                            console.log('draw!');
-                        }
-                    });
-                }
-
-            })(TbsUnit);
 
             TbsUnit.load('unit/human/peasant/peasant', function (u) {
                 u1 = u.placeTo(map, 1, 1).setPlayer(1);

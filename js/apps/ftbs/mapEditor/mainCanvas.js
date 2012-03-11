@@ -11,9 +11,18 @@ define(
         // 'Mouse',
         'jquery',
         'map/MapCell',
+        'decorator',
+        'map/Map',
+        'map/gex/Gex'
         //'layers/canvas/CanvasLayerEvents'
     ],
-    function (ImageLayer, Sidebar, MapGenerator, Gex, $, MapCell) {
+    function (ImageLayer, Sidebar, MapGenerator, Gex, $, MapCell, decorator, Map) {
+        /**
+         * Puts cell to the map
+         *
+         * @param string|MapCell srcCell name of MapCell resource or instance of MapCell
+         * @param MapCell targetCell
+         */
         var putCell = function (srcCell, targetCell) {
             if (!srcCell || !targetCell) return;
             if (srcCell instanceof MapCell) {
@@ -37,10 +46,14 @@ define(
 
         return function () {
 
-            map = MapGenerator.create({size:[5, 5], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
-            $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
-                map.$infoPanel = $('#mapInfo');
+            //map = MapGenerator.create({size:[5, 5], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+            Map.load('map/map/demo1', function (me) {
+                map = me;
+                $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
+                    map.$infoPanel = $('#mapInfo');
+                });
             });
+
             //=================OnClick Event====================================
 //            // works both for both, Canvas & DOM ImageLayer
 //            map.cells.forEach(function (row) {
@@ -58,13 +71,9 @@ define(
 //                });
 //            });
 
-            (function () {
-                var doOnLoad = MapCell.prototype._doOnLoad;
-                MapCell.prototype._doOnLoad = function () {
-                    doOnLoad.call(this);
-                    this.layer.on('click', putCellHandler);
-                }
-            })();
+            decorator.decorate(MapCell.prototype, '_doOnLoad', function () {
+                this.layer.on('click', putCellHandler);
+            });
 
             // works only for DOMImageLayer
             //map.layer.on('click', putCellHandler);

@@ -1,8 +1,19 @@
 if (!this.env) env = {};
 env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
 define(
-    ['layers/canvas/CanvasLayer', 'widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'Mouse', 'jquery', 'layers/canvas/CanvasLayerEvents'],
-    function (CanvasLayer, sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, Mouse, $) {
+    [
+        'layers/ImageLayer',
+        'widgets/sidebar/Sidebar',
+        'map/MapGenerator',
+        'map/gex/Gex',
+        //'Player',
+        // 'tbsGame/TbsUnit',
+        // 'Mouse',
+        'jquery',
+        'map/MapCell',
+        //'layers/canvas/CanvasLayerEvents'
+    ],
+    function (ImageLayer, Sidebar, MapGenerator, Gex, $, MapCell) {
         var putCell = function (srcCell, targetCell) {
             if (!srcCell || !targetCell) return;
             if (srcCell instanceof MapCell) {
@@ -10,8 +21,7 @@ define(
                 //srcCell.layer.update();
                 return;
             } else {
-                console.log('put ', srcCell, ' to ', targetCell.x, ':', targetCell.y);
-                Gex.load(
+                MapCell.load(
                     'map/cell/gex/' + srcCell,
                     function (cell) {
                         putCell(cell, targetCell);
@@ -31,23 +41,33 @@ define(
             $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
                 map.$infoPanel = $('#mapInfo');
             });
-            map.cells.forEach(function (row) {
-                row.forEach(function (cell) {
-                    cell.onLoad(function () {
-                        cell.layer.on('click', function () {
-                            console.log('direct cell click');
-                            putCell($('#cell').val(), map.selectedCell);
-                            cell.layer.onLoad(function () {
-                                cell.layer.on('click', putCellHandler);
-                            });
-
-                        });
-                    });
+            //=================OnClick Event====================================
+//            // works both for both, Canvas & DOM ImageLayer
+//            map.cells.forEach(function (row) {
+//                row.forEach(function (cell) {
+//                    cell.onLoad(function () {
+//                        cell.layer.on('click', function () {
+//                            console.log('direct cell click');
+//                            putCell($('#cell').val(), map.selectedCell);
+//                            cell.layer.onLoad(function () {
+//                                cell.layer.on('click', putCellHandler);
+//                            });
 //
-                });
-            })
-            map.layer.on('click', putCellHandler);
+//                        });
+//                    });
+//                });
+//            });
+
+            (function () {
+                var doOnLoad = MapCell.prototype._doOnLoad;
+                MapCell.prototype._doOnLoad = function () {
+                    doOnLoad.call(this);
+                    this.layer.on('click', putCellHandler);
+                }
+            })();
+
+            // works only for DOMImageLayer
+            //map.layer.on('click', putCellHandler);
         }
     }
-)
-;
+);

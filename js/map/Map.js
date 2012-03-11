@@ -164,6 +164,7 @@ define(
                         config[i] = this[i];
                     }
                 }
+                return config;
             }
         }
 

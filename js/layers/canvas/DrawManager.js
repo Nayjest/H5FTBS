@@ -77,6 +77,14 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
                 }
             }
         }
+        /**
+         * Draw all layers on all canvases
+         */
+        this.drawAll = function(){
+            for (var i = Canvas.instances.length;i--;) {
+                this.draw(i);
+            }
+        }
 
     });
 
@@ -145,6 +153,10 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
         init:function () {
             mutateCanvasLayer();
             startLoop();
+            window.onresize = function(event) {
+                console.log('resize', event);
+                drawList.drawAll();
+            }
         }
     }
     DrawManager.init();

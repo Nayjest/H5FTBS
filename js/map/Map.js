@@ -37,17 +37,19 @@ define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Clas
         this.cellSize = options.cellSize;
         this._createLayer();
         this._clearCells();
-        this.objects = options.objects;
-        for (var i = options.length; i--;) {
-            if (!(options.objects[i] instanceof MapObject)) options.objects[i] = construct(options.objects[i]);
-            options.objects[i].placeTo(this, options.objects[i].x, options.objects[i].y);
+        var objects = options.objects.slice(0);
+        for (var i = objects.length; i--;) {
+            if (!(objects[i] instanceof MapObject)) objects[i] = construct(objects[i]);
+            objects[i].placeTo(this, objects[i].x, objects[i].y);
         }
+        this.objects= objects;
+
         this.units = options.units;
 
         //MapCell selected at current moment 
         this.selectedCell = null;
         this.selectedCellHoverLayer = new ImageLayer(options.selectedCellHoverLayer);
-        this.selectedCellHoverLayer.onLoad(function(){
+        this.selectedCellHoverLayer.onLoad(function () {
             console.log(me.selectedCellHoverLayer);
             me.selectedCellHoverLayer.setSize(me.cellSize);
             me.selectedCellHoverLayer.setParent(me.layer);
@@ -69,7 +71,7 @@ define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Clas
             this.cells = [];
             for (var x = 0; x < this.size[0]; x++) {
                 this.cells[x] = [];
-                for (var y = 0; y < this.size[0]; y++) {
+                for (var y = 0; y < this.size[1]; y++) {
                     this.cells[x][y] = null;
                 }
             }
@@ -113,11 +115,11 @@ define(['map/MapObject', 'layers/DomLayer', 'layers/ImageLayer', 'jquery', 'Clas
             return objects;
         },
 
-        export:function(){
+        export:function () {
             var config = {};
-            for(var i in this) {
+            for (var i in this) {
                 if (this.hasOwnProperty(i)) {
-                    config[i]=this[i];
+                    config[i] = this[i];
                 }
             }
         }

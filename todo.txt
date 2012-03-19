@@ -48,4 +48,14 @@
 
 * Make game work offline http://hernan.amiune.com/teaching/HTML5-Game-Development-Tips.html
 
-*make appcache manifest generator
+* make appcache manifest generator
+
+* set writeable: false for constants
+
+* Implement resource loading via amd loader plugins
+
+* Optimise DrawManager
+
+* Script for javascript parsing & optimisation (for example, replace slow navive getters/setters to setProp()/getProp() methods)
+
+* Use void 0 instead of undefined and "prop in Obj" check instead trying to get it

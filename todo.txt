@@ -76,6 +76,8 @@
 
 * DirectCanvas, AppMobi, phoneGap
 
+* Store default values in prototype, don't merge it to class instances
+
 ___________________________________________________________________________________
 Review:
 

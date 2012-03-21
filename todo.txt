@@ -78,6 +78,9 @@
 
 * Store default values in prototype, don't merge it to class instances
 
+* Test on slow connections via Fiddler
+
+* Implement WebGL layers
 ___________________________________________________________________________________
 Review:
 

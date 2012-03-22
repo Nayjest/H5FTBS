@@ -36,6 +36,7 @@ define(
             $infoPanel:'#mapInfo', // jquery object that represents dom element of info panel
             objects:[], // configuration or instances of map objects
             units:[],
+            cells:[]
         }
 
         Map = function (config) {

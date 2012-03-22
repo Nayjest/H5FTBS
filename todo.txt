@@ -44,8 +44,6 @@
 
 *Bug: после убийства юнита при попытке подсветить ходы для других юнитов: Uncaught TypeError: Cannot read property 'mapCell' of undefined Map:112, before MapCell:112, Before:TbsUnit:123
 
-*Unit tests for JS
-
 * Make game work offline http://hernan.amiune.com/teaching/HTML5-Game-Development-Tips.html
 
 *make appcache manifest generator
@@ -81,6 +79,8 @@
 * Test on slow connections via Fiddler
 
 * Implement WebGL layers
+
+* PhantomJS + JSCoverage + QUnit, see http://habrahabr.ru/post/135979/ 
 ___________________________________________________________________________________
 Review:
 
@@ -88,3 +88,8 @@ ________________________________________________________________________________
 Done:
 
 * Implement func. decorators (append, prepend),
+
+___________________________________________________________________________________
+Partially:
+
+*Unit tests for JS

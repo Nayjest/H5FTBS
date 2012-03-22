@@ -64,6 +64,23 @@
 
 * Move decorators to lib, create documentation & publish on github
 
+* set writeableble: false for constants
+
+* Implement resource loading via amd loader plugins
+
+* Optimise DrawManager
+
+* Script for javascript parsing & optimisation (for example, replace slow navive getters/setters to setProp()/getProp() methods)
+
+* Use void 0 insted of undefined
+
+* DirectCanvas, AppMobi, phoneGap
+
+* Store default values in prototype, don't merge it to class instances
+
+* Test on slow connections via Fiddler
+
+* Implement WebGL layers
 ___________________________________________________________________________________
 Review:
 

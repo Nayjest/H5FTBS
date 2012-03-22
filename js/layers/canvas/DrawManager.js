@@ -146,6 +146,7 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
     }
 
     function startLoop() {
+        //@todo magick number! move it somewhere
         setInterval(redraw, 30);
     }
 
@@ -154,7 +155,6 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
             mutateCanvasLayer();
             startLoop();
             window.onresize = function(event) {
-                console.log('resize', event);
                 drawList.drawAll();
             }
         }

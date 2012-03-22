@@ -33,6 +33,8 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
         image:null,
         fit:Me.fit.SCALE,
         ready:false,
+        flipVertical:false,
+        flipHorizontal:false,
         drawMethod:function () {
             if (!this.ready) return;
             var ctx = this.ctx;

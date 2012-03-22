@@ -12,7 +12,8 @@
             paths:{
                 'jquery':'lib/jquery/jquery-1.7.1.min',
                 'jquery.tmpl':'lib/jquery-tmpl/jquery.tmpl.min',
-                'tests':'/tests'
+
+                'tests':'/tests/testCases'
             },
             //only for dev mode to disable browser caching. if you need to add breakpoints in Chrome debug, disable it
             // @todo This makes js files unreachable in ie developers toolbar
@@ -21,7 +22,7 @@
     </script>
     <script src="/js/lib/requirejs/require.js"></script>
     <script>
-        require(['tests/main']);
+        require(['/tests/main.js']);
     </script>
 </head>
 <body>

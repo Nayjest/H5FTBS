@@ -3,7 +3,8 @@ env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
 define(
     [
         'layers/ImageLayer',
-        'widgets/sidebar/Sidebar',
+        //'widgets/sidebar/Sidebar',
+        'apps/ftbs/mapEditor/src/sidebar/sidebar',
         'map/MapGenerator',
         'map/gex/Gex',
         //'Player',
@@ -16,7 +17,10 @@ define(
         'map/gex/Gex'
         //'layers/canvas/CanvasLayerEvents'
     ],
-    function (ImageLayer, Sidebar, MapGenerator, Gex, $, MapCell, decorator, Map) {
+    function (ImageLayer, sidebar, MapGenerator, Gex, $, MapCell, decorator, Map) {
+
+        var map;
+
         /**
          * Puts cell to the map
          *
@@ -47,11 +51,9 @@ define(
         return function () {
 
             //map = MapGenerator.create({size:[5, 5], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
-            Map.load('map/map/demo1', function (me) {
-                map = me;
-                $('#sidebar').load('/js/apps/ftbs/mapEditor/res/sidebar.php', function () {
-                    map.$infoPanel = $('#mapInfo');
-                });
+            Map.load('map/map/demo1', function (m) {
+                map = m;
+                m.$infoPanel = $('#mapInfo');
             });
 
             //=================OnClick Event====================================

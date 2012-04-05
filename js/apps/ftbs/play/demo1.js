@@ -24,6 +24,10 @@ define(
                 u4 = u.placeTo(map, 6, 3).setPlayer(2);
             });
 
+            TbsUnit.load('unit/human/cleric/cleric', function (u) {
+                u5 = u.placeTo(map, 2, 4).setPlayer(1);
+            });
+
 
             stone = new MapObject({
                 passable:false,

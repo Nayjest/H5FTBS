@@ -1,9 +1,10 @@
 require(
-    ['url', 'debug/GlobalizeModules'],
-    function (url, GlobalizeModules) {
+    ['url', 'debug/globalizeModules', 'settings'],
+    function (url, globalizeModules, settings) {
         // @todo remove in production, move to url router
-        if (url.getParams('glob')) {
-            GlobalizeModules.start();
+        if (url.getParams('glob') || settings.globals) {
+            if (settings.logLoadedModules) globalizeModules.logLoadedModules = true;
+            globalizeModules.enable();
         }
         var route = url.getParams('r') || 'ftbs/play/demo1';
 

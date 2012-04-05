@@ -7,7 +7,9 @@ define(['layers/canvas/CanvasLayer', 'Canvas', 'jquery'], function (CanvasLayer,
     var FN = Function,
         glob = FN('return this')(),
         _canvasesToRedraw = {},
-        undefined = void(0);
+        undefined = void(0),
+        settings = glob.settings?glob.settings:{};
+        if (!settings.redrawInterval) settings.redrawInterval = 30;
 
     var drawList = new (function () {
 
@@ -149,8 +151,7 @@ define(['layers/canvas/CanvasLayer', 'Canvas', 'jquery'], function (CanvasLayer,
     }
 
     function startLoop() {
-        //@todo magick number! move it somewhere
-        setInterval(redraw, 30);
+        setInterval(redraw, settings.redrawInterval);
     }
 
     var DrawManager = {

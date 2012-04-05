@@ -1,5 +1,5 @@
-if (!this.env) env = {};
-env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
+if (!this.settings) settings = {};
+settings.graphicsEngine = 'canvas';
 define(
     [
         'layers/ImageLayer',

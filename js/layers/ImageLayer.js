@@ -1,19 +1,20 @@
-if (!this.env) env = {};
-if (!env.imageLayerClass) env.imageLayerClass = 'layers/DomImageLayer';
-//if (!env.imageLayerClass) env.imageLayerClass = 'layers/canvas/CanvasImageLayer';
-var dependencies= []
-if (env.imageLayerClass === 'layers/canvas/CanvasImageLayer') {
-    dependencies = [
-        env.imageLayerClass,
-        'layers/canvas/DrawManager',
-        'layers/canvas/CanvasLayerEvents'
-    ];
-
-} else {
-    dependencies = [env.imageLayerClass]
+"use strict";
+/* Get global object (window in browser) in strict mode */
+var FN = Function,
+    glob = FN('return this')(),
+    /* Get settings from global object */
+    settings = glob.settings = glob.settings ? glob.settings : {};
+/* default settings */
+if (!settings.graphicsEngine) settings.graphicsEngine = 'dom';
+/* module dependencies according to specific graphicEngines */
+var dependencies = {
+    canvas:['layers/canvas/CanvasImageLayer', 'layers/canvas/DrawManager'],
+    dom:['layers/DomImageLayer'],
+    webgl:[]
 }
-define(dependencies,
+define(dependencies[settings.graphicsEngine],
     function (ImageLayer) {
         return ImageLayer;
     }
 );
+

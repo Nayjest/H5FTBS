@@ -1,7 +1,6 @@
 res = {
-    size:[43,60],
+    size:[38,70],
     offset:[0,0],
     zIndex:require('utils').rndInt(require('map/Map').zLevels.units),
-    image:'/img/units/rat/shaman/t_h60.png',
-    //fit:Me.fit.CONTAIN
+    image:'/img/units/human/cleric/1_h70.png'
 }

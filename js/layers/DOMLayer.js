@@ -27,14 +27,27 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
     }
     var Me = DomLayer.inheritsFrom(AbstractLayer).extendProto(JqueryEventsMixin, {
 
-        setZIndex: function(zIndex) {
+        setZIndex:function (zIndex) {
             Me.superProto.setZIndex.call(this, zIndex);
-            this.$el.css('z-index',zIndex);
+            this.$el.css('z-index', zIndex);
             return this;
         },
 
-        calcDOMOffset:function () {
+        _getNonDomLayersOffset:function () {
+            var layer = this,
+                x = 0,
+                y = 0;
+            while (layer = layer.parent) {
+                if (!(layer instanceof Me)) {
+                    x += layer.offset[0];
+                    y += layer.offset[1];
+                }
+            }
+            return [x, y];
 
+        },
+        calcDOMOffset:function () {
+            //return this.getAbsoluteOffset();
             var parentOffset = this.$parentEl.offset();
             var zoom = this.getZoom();
             var w = this.size[0] * zoom;
@@ -52,9 +65,11 @@ define(['layers/AbstractLayer', 'JqueryEventsMixin', 'jquery', 'Loadable'], func
                 innerTopRightPos[0] += (w - d * Math.cos(Math.asin(h / d) - a)) / 2;
             }
 
+            /** @todo exclude it in DOMLayer mode? */
+            var nonDomOffset = this._getNonDomLayersOffset();
             return {
-                left:parentOffset.left + innerTopRightPos[0] + this.offset[0] * zoom,
-                top:parentOffset.top + innerTopRightPos[1] + this.offset[1] * zoom
+                left:parentOffset.left + innerTopRightPos[0] + this.offset[0] * zoom + nonDomOffset[0],
+                top:parentOffset.top + innerTopRightPos[1] + this.offset[1] * zoom + nonDomOffset[1]
             }
         },
         setOffset:function (offset) {

@@ -27,20 +27,7 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
         this._onLoad = [];
         if (config) merge(this, config);
         mergeUndefined(this, defaults);
-
-        ImageLayer.load(this.layer, function (layer) {
-            layer.on('click', function () {
-                self.select(self.map.game.currentPlayer);
-            });
-            layer.on('mouseover', function () {
-                self.map.selectCell(self.mapCell);
-            });
-            self.layer = layer;
-            self.ready = true;
-            self._doOnLoad();
-
-        });
-
+        this._initLayer();
     }
 
     MapObject.prototype = {
@@ -59,6 +46,21 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
             map.objects.push(this);
             return this;
         },
+        _initLayer:function () {
+            var self = this;
+            ImageLayer.load(this.layer, function (layer) {
+                layer.on('click', function () {
+                    self.select(self.map.game.currentPlayer);
+                });
+                layer.on('mouseover', function () {
+                    self.map.selectCell(self.mapCell);
+                });
+                self.layer = layer;
+                self.ready = true;
+                self._doOnLoad();
+
+            });
+        },
         onLoad:function (callback) {
             if (!this.ready)
                 this._onLoad.push(callback);
@@ -69,7 +71,7 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
          * Execute onload handlers
          */
         _doOnLoad:function () {
-            for (var i = 0 ; i<this._onLoad.length;i++) {
+            for (var i = 0; i < this._onLoad.length; i++) {
                 this._onLoad[i](this);
             }
         },

@@ -15,12 +15,14 @@
  */
 define(['Class'], function () {
     "use strict";
-    function Node(parent, children) {
-        this.children = [];
+    var _id = 0;
+
+    function Node(parent, childrenArray) {
+        this.children = {};
         this.setParent(parent);
-        if (children) {
+        if (childrenArray) {
             for (var i = this.children.length; i--;) {
-                children[i].addTo(this);
+                childrenArray[i].addTo(this);
             }
         }
     }
@@ -43,9 +45,11 @@ define(['Class'], function () {
          */
         getAllChildrenRecursive:function (appendTo) {
             var children = this.children;
-            var res = appendTo ? children.concat(appendTo) : children.slice(0);
-            for (var i = this.children.length; i--;) {
-                res = res.concat(this.children[i].getAllChildrenRecursive());
+            var res = appendTo ? appendTo.concat(children) : Array.prototype.slice.call(children);
+            for (var i in children) {
+                if (children.hasOwnProperty(i)) {
+                    res = res.concat(this.children[i].getAllChildrenRecursive());
+                }
             }
             return res;
         },
@@ -55,7 +59,8 @@ define(['Class'], function () {
          * @return Boolean
          */
         haveChild:function (node) {
-            return this.children.indexOf(node) !== -1;
+            /* @todo work on performance */
+            return Array.prototype.slice.call(this.children).indexOf(node) !== -1;
         },
 
         /**
@@ -66,35 +71,38 @@ define(['Class'], function () {
         setParent:function (parent) {
             this.detach();
             if (parent) {
-                parent.children.push(this);
+                parent.children[_id] = this;
+                _id++;
             }
             this.parent = parent;
             return this;
         },
         /**
-         * Remove item from parents children list and set parent to null
+         * Remove item from parents children list and set parent to null.
+         * If have no parent, do nothing.
          * @return Node this
          */
         detach:function () {
-            //@todo WTF??? All failed when it start work correctly :(
-            return this;
             if (this.parent) {
-                var i = this.parent.children.indexOf(this);
-                if (i === -1) {
-                    throw new Error('Can\'t detach element, it\'s absent in children list.');
-                } else {
-                    delete this.parent.children[i];
+                var index = null;
+                for (var i in this.parent.children) {
+                    if (this.parent.children[i] === this) {
+                        delete this.parent.children[i];
+                        return this;
+                    }
                 }
+                //throw new Error('Can\'t detach element, it\'s absent in children list.');
             }
             return this;
-
         },
         destroy:function () {
             return this.destroyChildren().detach();
         },
         destroyChildren:function () {
-            for (var i = this.children.length; i--;) {
-                this.children[i].destroy();
+            for (var i in this.children) {
+                if (this.children.hasOwnProperty(i)) {
+                    this.children[i].destroy();
+                }
             }
             return this;
         }

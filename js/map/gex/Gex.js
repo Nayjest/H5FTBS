@@ -9,9 +9,9 @@ define(
         'map/Map' ,
         'layers/ImageLayer',
         'Utils',
-        'Mouse'
+        'mouse'
     ],
-    function (MapCell, Map, ImageLayer, Utils, Mouse) {
+    function (MapCell, Map, ImageLayer, Utils, mouse) {
 
         Gex = function (config) {
             Gex.superClass.apply(this, arguments);
@@ -106,13 +106,13 @@ define(
             },
 
             getClosestNeighborByCursor:function (filter) {
-                //console.log(Mouse.pos, this.layer.$el.offset());
+                //console.log(mouse.pos, this.layer.$el.offset());
                 var candidates = filter ? Utils.arrayIntersect(this.nearby(), filter) : this.nearby();
                 var res = candidates.map(
                     function (cell) {
                         return {
                             cell:cell,
-                            dist:Utils.distance(Mouse.pos, cell.layer.getCenterScreenPos())
+                            dist:Utils.distance(mouse.pos, cell.layer.getCenterScreenPos())
                         }
                     }).sort(
                     function (a, b) {

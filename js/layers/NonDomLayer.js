@@ -1,7 +1,7 @@
 /**
  *  module NonDomLayer
  */
-define(['layers/AbstractLayer', 'jquery', 'Mouse'], function (AbstractLayer, $, Mouse) {
+define(['layers/AbstractLayer', 'jquery', 'mouse'], function (AbstractLayer, $, mouse) {
     "use strict";
     // instances counter
     var _id = 0,
@@ -70,7 +70,7 @@ define(['layers/AbstractLayer', 'jquery', 'Mouse'], function (AbstractLayer, $, 
 
     $('body').on('mousemove mousedown mouseup click', function (event) {
         var lp, //position of iterated layer
-            mp = Mouse.pos, //current mouse position
+            mp = mouse.pos, //current mouse position
             l, //current layer
             layers = Me.prototype.instances, //all layers
             args; //arguments passed to callback @todo make it compatible with DOM/jquery events, pass same data

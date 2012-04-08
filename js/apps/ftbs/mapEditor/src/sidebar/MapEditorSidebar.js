@@ -1,12 +1,12 @@
 define(['widgets/Widget'], function (Widget) {
     "use strict";
-    var Sidebar = function (config) {
+    var MapEditorSidebar = function (config) {
         Me.superClass.call(this, config);
     },
-        Me = Sidebar;
+        Me = MapEditorSidebar;
     Me.inheritsFrom(Widget);
     Me.extendProto({
-        tplSrc:'/js/widgets/sidebar/sidebar.tpl'
+        tplSrc:'/js/apps/ftbs/mapEditor/src/sidebar/mapEditorSidebar.tpl'
     });
     return Me;
 });

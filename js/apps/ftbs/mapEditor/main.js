@@ -1,6 +1,6 @@
 define(
-    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'Mouse', 'jquery'],
-    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, Mouse, $) {
+    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'mouse', 'jquery'],
+    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, mouse, $) {
         var putCell = function (srcCell, targetCell) {
             if (!srcCell || !targetCell) return;
             if (srcCell instanceof MapCell) {

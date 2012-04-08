@@ -22,7 +22,7 @@
             cells[x][y] = 'map/cell/gex/' + cellsTypes[cellsData[y][x]] + '/1';
         }
     }
-    cells[1][1] = {_class:'Gex',type: 7,layer:'map/cell/gex/ground/layer'};
+    //cells[1][1] = {_class:'Gex',type: 7,layer:'map/cell/gex/ground/layer'};
     return {
         cells:cells,
         size:[cells.length, cells[0].length]

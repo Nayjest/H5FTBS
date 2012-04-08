@@ -1,10 +1,8 @@
-if (!this.settings) settings = {};
-settings.graphicsEngine = 'canvas';
 define(
     [
         'layers/ImageLayer',
-        //'widgets/sidebar/Sidebar',
-        'apps/ftbs/mapEditor/src/sidebar/sidebar',
+        //'widgets/sidebar/sidebar',
+        'apps/ftbs/mapEditor/src/sidebar/MapEditorSidebar',
         'map/MapGenerator',
         'map/gex/Gex',
         //'Player',
@@ -14,12 +12,21 @@ define(
         'map/MapCell',
         'decorator',
         'map/Map',
-        'map/gex/Gex'
+        'settings',
+        'map/export/mapExport',
+        'url',
+        'mouse'
         //'layers/canvas/CanvasLayerEvents'
     ],
-    function (ImageLayer, sidebar, MapGenerator, Gex, $, MapCell, decorator, Map) {
+    function (ImageLayer, MapEditorSidebar, MapGenerator, Gex, $, MapCell, decorator, Map, settings, mapExport, url, mouse) {
+        "use strict";
+        //Get global object (window in browser) in strict mode
+        var FN = Function,
+            glob = FN('return this')();
 
         var map;
+
+        var sidebar = new MapEditorSidebar();
 
         /**
          * Puts cell to the map
@@ -47,14 +54,32 @@ define(
             putCell($('#cell').val(), map.selectedCell);
         }
 
+        var saveMap = function (map, name, callback) {
+            var exported = mapExport.export(map);
+            console.log('map:', exported);
+            $.post('/backend/mapSave.php', {data:exported, fileName:name}, callback);
+        }
+
+        var onMapSaved = function (response) {
+            console.log('Map saved, server responce:', response)
+        }
+
 
         return function () {
-
+            var mapName = url.getParams('map');
+            if (!mapName) {
+                mapName = 'map/map/demo1';
+            }
+            console.log('MAP NAME:', mapName);
             //map = MapGenerator.create({size:[5, 5], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
-            Map.load('map/map/demo1', function (m) {
+            Map.load(mapName, function (m) {
                 map = m;
                 m.$infoPanel = $('#mapInfo');
+                if (settings.globals) {
+                    glob.map = map;
+                }
             });
+
 
             //=================OnClick Event====================================
 //            // works both for both, Canvas & DOM ImageLayer
@@ -74,7 +99,18 @@ define(
 //            });
 
             decorator.decorate(MapCell.prototype, '_doOnLoad', function () {
+                this.layer.on('mouseover', function(){
+                    if (mouse.keyPressed[mouse.KEY_LEFT]) putCellHandler();
+                });
+                //@todo not works, probably hover layer overlaps cel layer
                 this.layer.on('click', putCellHandler);
+            });
+
+
+            $('#btnSave').click(function () {
+                console.log('Saving map...');
+                saveMap(map, $('#mapName').val(), onMapSaved);
+                console.log('ok!');
             });
 
             // works only for DOMImageLayer

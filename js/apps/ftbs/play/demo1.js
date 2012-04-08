@@ -1,9 +1,14 @@
 define(
-    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
-    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $, canvasUtils, utils, CanvasLayer) {
-        return function () {
+    ['widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
+    function (Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, canvasUtils, utils, CanvasLayer) {
 
-            map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+        return function () {
+            window.map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+            window.sbar = new Sidebar({
+                onReady:function () {
+                    window.map.$infoPanel = $('#mapInfo');
+                }
+            });
 
             game = new TurnBasedGame({
                 map:map,

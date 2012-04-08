@@ -4,7 +4,7 @@
 define(['jquery', 'jquery.tmpl', 'Class'], function ($) {
     /**
      * This class have asynchronous constructor
-     * (it can return defferred object instead of widget instance)
+     * (it can return deferred object instead of widget instance)
      *
      * Usage:
      * <code>
@@ -19,38 +19,37 @@ define(['jquery', 'jquery.tmpl', 'Class'], function ($) {
      *      tplSrc -- url of template file
      *      tplBody -- template body (html)
      * other supported options:
-     *      placeTo -- selector of DOM element that will contain widget
+     *      container -- selector of DOM element that will contain widget
      *
      *
      * @param config
      */
     Widget = function (config) {
-        var me = this;
-        if (config.tplSrc) {
-            return $.get(config.tplSrc, {}, function (templateBody) {
-                var options = merge({},config);
-                options.tplBody = templateBody;
-                me.tplSrc = options.tplSrc;
-                delete options.tplSrc;
-                return Widget.call(me, options);
-            });
-        } else if (config.tplBody) {
-            me.tplBody = config.tplBody;
-            me.$el = $.tmpl(config.tplBody, config.data ? config.data : {});
-        } else {
-            throw new Error('Widget template not specified: required tplSrc or tplBody properties.');
-        }
-
-        if (config.placeTo) {
-            me.placeTo(config.placeTo);
-        }
-
-        return me;
+        if (config) merge(this, config);
+        this.update(this.onReady);
+        return this;
     }
 
     Widget.prototype = {
-        placeTo:function (targetSelector) {
-            $(this.$el).appendTo(targetSelector);
+
+        data:{},
+        tplSrc:'',
+        tplBody:'',
+        container:'body',
+        onReady:null,
+
+        update:function (onUpdate) {
+            if (this.tplBody) {
+                this.$el = $($.tmpl(this.tplBody, this.data)).appendTo(this.container);
+                if (onUpdate) onUpdate.call(this);
+                return this;
+            } else {
+                var me = this;
+                return $.get(this.tplSrc, {}, function (tplBody) {
+                    me.tplBody = tplBody;
+                    me.update(onUpdate);
+                });
+            }
         }
     }
     return Widget;

@@ -15,16 +15,21 @@ define(
         'settings',
         'map/export/mapExport',
         'url',
-        'mouse'
+        'mouse',
+        'tbsGame/TbsUnit',
+        'utils'
+
         //'layers/canvas/CanvasLayerEvents'
     ],
-    function (ImageLayer, MapEditorSidebar, MapGenerator, Gex, $, MapCell, decorator, Map, settings, mapExport, url, mouse) {
+    function (ImageLayer, MapEditorSidebar, MapGenerator, Gex, $, MapCell, decorator, Map, settings, mapExport, url, mouse, TbsUnit, utils) {
         "use strict";
         //Get global object (window in browser) in strict mode
         var FN = Function,
             glob = FN('return this')();
 
-        var map;
+        var map,
+            // possible values:'terrain' | 'units' | ...
+            mode = 'terrain';
 
         var sidebar = new MapEditorSidebar();
 
@@ -48,10 +53,29 @@ define(
                     }
                 );
             }
-
         }
-        var putCellHandler = function () {
-            putCell($('#cell').val(), map.selectedCell);
+
+        var putUnit = function (unit, targetCell) {
+            if (!unit || !targetCell) return;
+            if (unit instanceof TbsUnit) {
+                unit.placeTo(map, targetCell.x, targetCell.y);
+                //srcCell.layer.update();
+                return;
+            } else {
+                TbsUnit.load(
+                    'unit/' + unit,
+                    function (unit) {
+                        putUnit(unit, targetCell);
+                    }
+                );
+            }
+        }
+
+        var putToMapHandler = function () {
+            if (mode=='terrain')
+                putCell($('#cell').val(), map.selectedCell);
+            else
+                putUnit($('#unit').val(), map.selectedCell);
         }
 
         var saveMap = function (map, name, callback) {
@@ -99,18 +123,17 @@ define(
 //            });
 
             decorator.decorate(MapCell.prototype, '_doOnLoad', function () {
-                this.layer.on('mouseover', function(){
-                    if (mouse.keyPressed[mouse.KEY_LEFT]) putCellHandler();
+                this.layer.on('mouseover', function () {
+                    if (mouse.keyPressed[mouse.KEY_LEFT]) putToMapHandler();
                 });
-                //@todo not works, probably hover layer overlaps cel layer
-                this.layer.on('click', putCellHandler);
+                //@todo not works for DOM mode, probably hover layer overlaps cel layer
+                this.layer.on('click', putToMapHandler);
             });
 
-
+            $('#unit').live('click',function(){mode = 'units';});
+            $('#cell').live('click',function(){mode = 'terrain';});
             $('#btnSave').click(function () {
-                console.log('Saving map...');
                 saveMap(map, $('#mapName').val(), onMapSaved);
-                console.log('ok!');
             });
 
             // works only for DOMImageLayer

@@ -10,7 +10,8 @@ if (!settings.graphicsEngine) settings.graphicsEngine = 'dom';
 var dependencies = {
     canvas:['layers/canvas/CanvasImageLayer', 'layers/canvas/DrawManager'],
     dom:['layers/DomImageLayer'],
-    webgl:[]
+    webgl:[],
+    'webgl-2d':['layers/canvas/CanvasImageLayer', 'layers/canvas/DrawManager', 'layers/webgl-2d/enable']
 }
 define(dependencies[settings.graphicsEngine],
     function (ImageLayer) {

@@ -60,14 +60,6 @@ define(['layers/NonDomLayer', 'Canvas', /*'layers/canvas/CanvasLayerEvents',*/ '
             Me.superProto.update.call(this);
             return this;
         },
-        setParent:function (parent) {
-            Me.superProto.setParent.call(this, parent);
-            if (parent instanceof Me) {
-                // @todo
-
-            }
-            return this;
-        }
     });
 
     /**

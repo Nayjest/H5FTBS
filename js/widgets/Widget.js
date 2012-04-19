@@ -38,6 +38,10 @@ define(['jquery', 'jquery.tmpl', 'Class'], function ($) {
         container:'body',
         onReady:null,
 
+        /**
+         *
+         * @param onUpdate callback, 'this' is binded to widget instance
+         */
         update:function (onUpdate) {
             if (this.tplBody) {
                 this.$el = $($.tmpl(this.tplBody, this.data)).appendTo(this.container);

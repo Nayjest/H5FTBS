@@ -13,7 +13,7 @@ define([], function () {
         AUTO = null,
     settings = {
         /* possible values: 'dom', 'canvas', 'webgl', 'webgl-2d' */
-        graphicsEngine:'canvas',
+        graphicsEngine:'webgl-2d',
         /* @var int redrawInterval Redraw interval for canvas layers DrawManager */
         redrawInterval:30,
         /* DEBUG OPTIONS */

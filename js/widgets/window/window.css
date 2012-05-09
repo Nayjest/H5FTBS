@@ -1,0 +1,13 @@
+.w-window {
+    border-radius: 5px;
+    background-color: white;
+    -webkit-box-shadow: 5px 5px 10px #000;
+    z-index: 999;
+    position: fixed;
+    top:15%;
+    left:50%;
+    width: 400px;
+    margin-left: -200px;
+    height:250px;
+
+}

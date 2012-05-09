@@ -27,8 +27,9 @@ define(['map/MapObject', 'layers/ImageLayer', 'layers/NonDomLayer', 'Canvas'], f
         mergeUndefined(options, defaults);
         Unit.superClass.call(this, options);
         config.player && this.setPlayer(config.player);
-    }
-    Unit.inheritsFrom(MapObject).extendProto({
+    };
+    var Me = Unit;
+    Me.inheritsFrom(MapObject).extendProto({
         select:function () {
             Unit.superProto.select.call(this);
             var player = this.map.game.currentPlayer;

@@ -59,12 +59,13 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
 
         });
     }
-    TbsUnit.movementTypes = {
+    var Me = TbsUnit;
+    Me.movementTypes = {
         swim:'swim',
         walk:'walk',
         fly:'fly'
     }
-    TbsUnit.inheritsFrom(Unit).extendProto({
+    Me.inheritsFrom(Unit).extendProto({
         onNewTurn:function () {
             this.moves = this.maxMoves;
             this.canAttackOnThisTurn = true;
@@ -75,7 +76,7 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
 
         },
         placeTo:function (map, x, y) {
-            TbsUnit.superProto.placeTo.call(this, map, x, y);
+            Me.superProto.placeTo.call(this, map, x, y);
             map.units.push(this);
             return this;
         },
@@ -85,7 +86,7 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         moveTo:function (cell) {
 
             this.moves -= this.mapCell.distanceTo(cell);
-            TbsUnit.superProto.moveTo.call(this, cell);
+            Me.superProto.moveTo.call(this, cell);
             if (this.map.game.currentPlayer = this.player) {
                 this.showActions();
             }
@@ -143,6 +144,16 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         },
         canAttack:function (unit) {
             return this.isEnemy(unit) && this.getCellsCanAttack().indexOf(unit.mapCell) != -1;
+        },
+        destroy:function() {
+            if (this.map) {
+                for (var i = this.map.units.length;i--;){
+                    if (this.map.units[i]==this) {
+                        this.map.units.splice(i,1);
+                    }
+                }
+            }
+            Me.superProto.destroy.call(this);
         },
         canMoveTo:function (cell) {
             return this.getCellsCanMove().indexOf(cell) != -1;

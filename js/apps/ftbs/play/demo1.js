@@ -1,15 +1,11 @@
 define(
-    ['widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
-    function (Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, canvasUtils, utils, CanvasLayer) {
+    ['widgets/window/WindowWidget','widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
+    function (WindowWidget,Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, canvasUtils, utils, CanvasLayer) {
 
         return function () {
-            window.map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
-            window.sbar = new Sidebar({
-                onReady:function () {
-                    window.map.$infoPanel = $('#mapInfo');
-                }
-            });
 
+            //new WindowWidget({visible:false});
+            window.map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
             game = new TurnBasedGame({
                 map:map,
                 players:[
@@ -17,6 +13,15 @@ define(
                     new Player
                 ]
             });
+
+
+            window.sbar = new Sidebar({
+                onReady:function () {
+                    window.map.$infoPanel = $('#mapInfo');
+                },
+                game:game
+            });
+
 
             TbsUnit.load('unit/human/peasant/peasant', function (u) {
                 u1 = u.placeTo(map, 1, 1).setPlayer(1);
@@ -52,9 +57,6 @@ define(
                     zIndex:600
                 }
             }).placeTo(map, 7, 2).setPlayer(2);
-            u3.layer.onLoad(function () {
-                u3.layer.update();
-            });
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

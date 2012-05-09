@@ -28,7 +28,8 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
         if (config) merge(this, config);
         mergeUndefined(this, defaults);
         this._initLayer();
-    }
+    },
+        Me = MapObject;
 
     MapObject.prototype = {
         placeTo:function (map, x, y) {
@@ -76,12 +77,17 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
             }
         },
         destroy:function () {
-            for (var i in this.map.objects) {
-                if (this.map.objects[i] == this) {
-                    delete(this.map.objects[i]);
+
+            if (this.map) {
+                for (var i in this.map.objects) {
+                    if (this.map.objects[i] == this) {
+                        this.map.objects.splice(i, 1);
+                    }
                 }
             }
-            this.layer.destroy();
+            if (typeof this.layer === 'object') {
+                this.layer.destroy();
+            }
         },
         select:function () {
             console.log('selected!');

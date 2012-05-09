@@ -1,4 +1,4 @@
-define(['widgets/Widget'], function (Widget) {
+define(['widgets/TplWidget'], function (Widget) {
     "use strict";
     var MapEditorSidebar = function (config) {
         Me.superClass.call(this, config);

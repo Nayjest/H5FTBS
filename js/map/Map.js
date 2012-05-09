@@ -2,12 +2,14 @@ define(
     [
         'map/MapCell',
         'map/MapObject',
+        'map/Unit',
+        'tbsGame/tbsUnit',
         'layers/DomLayer',
         'layers/ImageLayer',
         'jquery',
         'Class'
     ],
-    function (MapCell, MapObject, DomLayer, ImageLayer, $) {
+    function (MapCell, MapObject, Unit, TbsUnit, DomLayer, ImageLayer, $) {
 
         // Terrain levels for drawing order
         var zLevels = {
@@ -45,49 +47,17 @@ define(
             mergeUndefined(options, defaults);
             this.size = options.size;
             this.cellSize = options.cellSize;
+            this.ready = $.Deferred();
             this._createLayer();
-            this._clearCells();
-            var objects = options.objects.slice(0);
-            for (var i = objects.length; i--;) {
-                if (!(objects[i] instanceof MapObject)) objects[i] = construct(objects[i]);
-                objects[i].placeTo(this, objects[i].x, objects[i].y);
-            }
-            this.objects = objects;
+            this._initCells(options.cells.slice(0)).done(function () {
+                $.when(
+                    me._initObjects(options.objects.slice(0)),
+                    me._initUnits(options.units.slice(0))
+                ).done(function(){
+                    this.ready.resolve(this);
+                }.bind(this));
+            }.bind(this));
 
-            var cells = options.cells.slice(0);
-            var cell;
-            for (var x = cells.length; x--;) {
-                for (var y = cells[x].length; y--;) {
-                    cell = cells[x][y];
-                    switch (typeof cell) {
-                        case 'object':
-                            if ((cell instanceof MapCell)) {
-                                cell.placeTo(this, x, y);
-                            } else if (typeof cell.promise === 'function') {
-                                $.when(cell, x, y).then(function (obj, x, y) {
-                                    obj.placeTo(me, x, y);
-                                });
-                            } else {
-                                cells[x][y] = construct(cell);
-                                cells[x][y].placeTo(me, x, y);
-                            }
-                            break;
-                        case 'string':
-                            (function (x, y) {
-                                MapCell.load(cell, function (obj) {
-                                    obj.placeTo(me, x, y);
-                                })
-                            })(x, y);
-                            break;
-                        default:
-                            console.log('invalid cell:',cells);
-                            throw new Error('Invalid cell');
-                    }
-                }
-            }
-            this.cells = cells;
-
-            this.units = options.units;
 
             //MapCell selected at current moment
             this.selectedCell = null;
@@ -101,6 +71,44 @@ define(
 
         }
         Map.prototype = {
+            /**
+             * Initialize map cells by 2 dimensional array.
+             * Array elements can be:
+             *  1) Instance of MapCell
+             *  2) Deferred object that will return instance of MapCell
+             *  3) Object containing configuration of map cell
+             *  4) String file name
+             * @param cells
+             */
+            _initCells:function (cells) {
+                var waitingFor = [];
+                var map = this;
+                map._clearCells();
+                for (var x = cells.length; x--;) {
+                    for (var y = cells[x].length; y--;) {
+                        (function (x, y) {
+                            waitingFor.push(MapCell.create(cells[x][y]).done(function (cell) {
+                                cell.placeTo(map, x, y);
+                            }));
+                        })(x, y);
+                    }
+                }
+                return $.when.apply($, waitingFor).promise();
+            },
+            _initObjects:function (objects) {
+                var map = this;
+                this.objects = [];
+                return MapObject.createAll(objects, function (obj) {
+                    obj.placeTo(map, obj.x, obj.y);
+                });
+            },
+            _initUnits:function (units) {
+                var map = this;
+                this.units = [];
+                return TbsUnit.createAll(units, function (obj) {
+                    obj.placeTo(map, obj.x, obj.y);
+                });
+            },
             _createLayer:function () {
                 this.layer = new DomLayer({
                     size:[this.size[0] * this.cellSize[0], this.size[1] * this.cellSize[1]],
@@ -156,16 +164,6 @@ define(
                     if (cell && (cell.x == x) && (cell.y == y)) objects.push(this.objects[i]);
                 }
                 return objects;
-            },
-
-            export:function () {
-                var config = {};
-                for (var i in this) {
-                    if (this.hasOwnProperty(i)) {
-                        config[i] = this[i];
-                    }
-                }
-                return config;
             }
         }
 

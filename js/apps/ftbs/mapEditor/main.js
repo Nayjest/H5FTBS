@@ -57,6 +57,10 @@ define(
 
         var putUnit = function (unit, targetCell) {
             if (!unit || !targetCell) return;
+            var oldUnit = targetCell.getUnits().pop();
+            if (oldUnit) {
+                oldUnit.destroy();
+            }
             if (unit instanceof TbsUnit) {
                 unit.placeTo(map, targetCell.x, targetCell.y);
                 //srcCell.layer.update();
@@ -72,16 +76,22 @@ define(
         }
 
         var putToMapHandler = function () {
-            if (mode=='terrain')
+            if (mode == 'terrain')
                 putCell($('#cell').val(), map.selectedCell);
             else
                 putUnit($('#unit').val(), map.selectedCell);
         }
 
         var saveMap = function (map, name, callback) {
-            var exported = mapExport.export(map);
-            console.log('map:', exported);
-            $.post('/backend/mapSave.php', {data:exported, fileName:name}, callback);
+            mapExport.export(map).then(
+                function (exported) {
+                    console.log('map:', exported);
+                    $.post('/backend/mapSave.php', {data:exported, fileName:name}, callback);
+                },
+                function (exported) {
+                    alert('Failed to export map!');
+                }
+            );
         }
 
         var onMapSaved = function (response) {
@@ -130,9 +140,13 @@ define(
                 this.layer.on('click', putToMapHandler);
             });
 
-            $('#unit').live('click',function(){mode = 'units';});
-            $('#cell').live('click',function(){mode = 'terrain';});
-            $('#btnSave').click(function () {
+            $('#unit').live('click', function () {
+                mode = 'units';
+            });
+            $('#cell').live('click', function () {
+                mode = 'terrain';
+            });
+            $('#btnSave').live('click', function () {
                 saveMap(map, $('#mapName').val(), onMapSaved);
             });
 

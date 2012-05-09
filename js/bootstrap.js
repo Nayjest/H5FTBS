@@ -21,10 +21,6 @@ require(
 
                 main();
 
-                $('body').get(0).onmousedown = function (e) {
-                    console.log('mouseDown',e);
-                };
-
                 // @todo move event handlers to new MapLayer class
                 $('body').click(function (e) {
                     if (e.srcElement == $('body').get(0)) {

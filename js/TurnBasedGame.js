@@ -1,20 +1,15 @@
 define(['Game','Class'],function(Game){
 
-    var defaults = {
-        $currentPlayer:'#playerInfo',        
-    }
     
-    TurnBasedGame = function(config){        
-        var options = merge({}, config);                
-        options = mergeUndefined(options,defaults);
-        if (typeof(options.$currentPlayer) == 'string') {
-            options.$currentPlayer = $(options.$currentPlayer);
-        }
+    TurnBasedGame = function(config){
+        TurnBasedGame.superClass.call(this,config);
         this.turn = 0;
-        TurnBasedGame.superClass.call(this,options);                   
-        
+        this.mapReady.done(function(){
+            this.newTurn();
+        }.bind(this));
+
     }
-    TurnBasedGame.inheritsFrom('Game').extendProto({
+    TurnBasedGame.inheritsFrom(Game).extendProto({
         addPlayer:function(player){
             TurnBasedGame.superProto.addPlayer.call(this,player);
             if (!this.currentPlayer) {
@@ -22,9 +17,8 @@ define(['Game','Class'],function(Game){
             }
         },
         nextTurn:function(){
-
             var i;
-            for (i in this.players){
+            for (i = this.players.length;i>0;i--){
                 if (this.players[i]==this.currentPlayer) break;
             }
             if (i==this.players.length-1) {
@@ -53,10 +47,8 @@ define(['Game','Class'],function(Game){
                 }
                 
             }
-            
             unit.select(player);
             this.selectedUnit = unit;
-
         },
         newTurn:function(){
             this.turn++;
@@ -65,12 +57,10 @@ define(['Game','Class'],function(Game){
                 units[i].onNewTurn();
             }
             this.setCurrentPlayer(this.players[0]);
-            console.log('turn '+this.turn);
-            
         },
         setCurrentPlayer:function(player){
             this.currentPlayer = player;
-            this.$currentPlayer.html(player.name);
+            //this.$currentPlayer.html(player.name);
             if (this.selectedUnit) this.selectedUnit.deselect();
             if (player.units.length) {
                 player.units[0].select();
@@ -79,6 +69,5 @@ define(['Game','Class'],function(Game){
         }
     });  
     
-    return TurnBasedGame;  
-
+    return TurnBasedGame;
 });

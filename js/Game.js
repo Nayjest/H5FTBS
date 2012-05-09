@@ -1,26 +1,28 @@
 define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager) {
 
-    var defaults = {
-
-    }
-
     /**
      *
      * @param config
      */
     Game = function (config) {
-        merge(this, config);
+        this.ready = $.Deferred();
         this.players = [];
-        mergeUndefined(this, defaults);
-        this.map = config.map instanceof Map ? config.map : Map.load(config.map);
-        this.animationManager = new AnimationManager();
-        this.map.game = this;
-        if (config.players) {
-            for (var i = config.players.length;i--;) {
-                this.addPlayer(config.players[i]);
+        this.mapReady = $.Deferred().done(function () {
+            if (config.players) {
+                for (var i = config.players.length; i--;) {
+                    this.addPlayer(config.players[i]);
+                }
             }
-        }
-        //this.currentPlayer = this.players[0].id;
+            this.ready.resolve(this);
+        }.bind(this));
+        Map.create(config.map).done(function (map) {
+            map.game = this;
+            this.map = map;
+            this.map.ready.done(function (map) {
+                this.mapReady.resolve(map);
+            }.bind(this));
+        }.bind(this));
+        this.animationManager = new AnimationManager();
     }
 
     Game.prototype = {
@@ -28,7 +30,7 @@ define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager
             player.connectToGame(this);
         },
         getPlayerById:function (id) {
-            for (var i in this.players) {
+            for (var i = this.players.length; i--;) {
                 if (this.players[i].id == id) return this.players[i];
             }
         }

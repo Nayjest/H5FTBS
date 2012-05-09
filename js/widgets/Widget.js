@@ -1,59 +1,36 @@
-/**
- * Widget
- */
-define(['jquery', 'jquery.tmpl', 'Class'], function ($) {
-    /**
-     * This class have asynchronous constructor
-     * (it can return deferred object instead of widget instance)
-     *
-     * Usage:
-     * <code>
-     * var myWidget;
-     * $.when(new Widget(...)).done(function(obj){
-     *     myWidget = obj;
-     * })
-     * </code>
-     *
-     * required options:
-     *   one of:
-     *      tplSrc -- url of template file
-     *      tplBody -- template body (html)
-     * other supported options:
-     *      container -- selector of DOM element that will contain widget
-     *
-     *
-     * @param config
-     */
-    Widget = function (config) {
-        if (config) merge(this, config);
-        this.update(this.onReady);
-        return this;
+define(['jquery'], function ($) {
+    "use strict";
+    var _emptyObj = {};
+    var _loadedCss = [];
+    function Widget(config) {
+        var widget = this;
+        if (!config) config = _emptyObj;
+        if (config.container) widget.container = config.container;
+        this.htmlReady = $.Deferred().done(function (html) {
+            widget.html = html;
+            widget.$el = $(html).appendTo(widget.container);
+        });
+        // resolve html only when we sure that container is available
+        $(function () {
+            if (config.html) widget.htmlReady.resolve(config.html);
+        });
     }
-
     Widget.prototype = {
-
-        data:{},
-        tplSrc:'',
-        tplBody:'',
-        container:'body',
-        onReady:null,
-
-        /**
-         *
-         * @param onUpdate callback, 'this' is binded to widget instance
-         */
-        update:function (onUpdate) {
-            if (this.tplBody) {
-                this.$el = $($.tmpl(this.tplBody, this.data)).appendTo(this.container);
-                if (onUpdate) onUpdate.call(this);
-                return this;
-            } else {
-                var me = this;
-                return $.get(this.tplSrc, {}, function (tplBody) {
-                    me.tplBody = tplBody;
-                    me.update(onUpdate);
-                });
-            }
+        container: 'body',
+        _requireCssFile:function(file) {
+            if (file in _loadedCss) return;
+            _loadedCss.push(file);
+            var link = document.createElement("link");
+            link.type = 'text/css';
+            link.rel = 'stylesheet';
+            link.href = file;
+            document.getElementsByTagName('head')[0].appendChild(link);
+        },
+        _destroy:function(){
+            this.$el.detach();
+        },
+        destroy:function(){
+            this.htmlReady.done(this._destroy.bind(this));
         }
     }
     return Widget;

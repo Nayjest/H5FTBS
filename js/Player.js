@@ -1,5 +1,5 @@
-define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
-    Player = function(config){
+define(['map/Map','layers/DomLayer'], function(Map, DomLayer){
+    var Player = function(config){
         var defaults = {
             controller:Player.controllers.local,
             killedUnits:[],        
@@ -26,15 +26,15 @@ define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
 
         getMarker:function(){
             var cellSize = this.game.map.cellSize;
-            console.log('cs',cellSize);
             var layerConfig = {
                 tag:'div',
                 size:[4,3],
                 offset:[cellSize[0]/2-10,-cellSize[1]/2+10],
                 css:{
                     backgroundColor:this.color,
-                    zIndex:Map.zLevels.gui,                    
-                    position:'absolute',
+                    // @todo MAP dosesn't loads. see: console.log('Map:',Map)
+                    zIndex:100,
+                    position:'absolute'
 
                 }
             }
@@ -68,7 +68,7 @@ define(['layers/DomLayer','map/Map'], function(DomLayer, Map){
                 this.team = this.id;
             }
             if (game.players.indexOf(this)==-1) game.players.push(this);            
-        }        
+        }
     }
 
     return Player;

@@ -17,7 +17,7 @@ define([], function () {
         /* @var int redrawInterval Redraw interval for canvas layers DrawManager */
         redrawInterval:30,
         /* DEBUG OPTIONS */
-        debug:true,
+        debug:false,
         globals:AUTO,
         logLoadedModules:AUTO
 

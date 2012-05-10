@@ -3,18 +3,22 @@
  */
 define(['Node', 'Class'], function (Node) {
 
+    var defaults = {
+        x:0,
+        y:0,
+        w:100,
+        h:100
+    };
     var Me = function (config) {
         if (config) merge(this, config);
+        this.offset = config.offset?config.offset:[defaults.x,defaults.y];
+        this.size = config.size?config.size:[defaults.w,defaults.h];
         this.setZIndex(config.zIndex ? config.zIndex : 1);
         Node.call(this, config.parent, config.children);
     }
 
     Me.extendProto(Node.prototype, {
         /* defaults */
-        /* layer size in pixels */
-        size:[100, 100],
-        /* offset in pixels */
-        offset:[0, 0],
         angle:0,
         zoom:1,
         /* end defaults */

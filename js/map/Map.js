@@ -10,7 +10,6 @@ define(
         'Class'
     ],
     function (MapCell, MapObject, Unit, TbsUnit, DomLayer, ImageLayer, $) {
-
         // Terrain levels for drawing order
         var zLevels = {
             back:[0],
@@ -41,7 +40,7 @@ define(
             cells:[]
         }
 
-        Map = function (config) {
+        var Map = function (config) {
             var options = merge({}, config),
                 me = this;
             mergeUndefined(options, defaults);
@@ -63,7 +62,6 @@ define(
             this.selectedCell = null;
             this.selectedCellHoverLayer = new ImageLayer(options.selectedCellHoverLayer);
             this.selectedCellHoverLayer.onLoad(function () {
-                console.log(me.selectedCellHoverLayer);
                 me.selectedCellHoverLayer.setSize(me.cellSize);
                 me.selectedCellHoverLayer.setParent(me.layer);
             });
@@ -164,11 +162,21 @@ define(
                     if (cell && (cell.x == x) && (cell.y == y)) objects.push(this.objects[i]);
                 }
                 return objects;
+            },
+            attachPlayers:function(players) {
+                for(var i = players.length, id;i--;){
+                    if (!(id=players[i].id)) continue;
+                    for(var j = this.units.length, unit;j--;){
+                        unit = this.units[j];
+                        if (unit.player == id){
+                            unit.setPlayer(players[i]);
+                        }
+                    }
+                }
             }
         }
 
         Map.zLevels = zLevels;
-
         return Map;
 
     }

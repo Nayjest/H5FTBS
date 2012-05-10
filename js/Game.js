@@ -7,12 +7,13 @@ define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager
     Game = function (config) {
         this.ready = $.Deferred();
         this.players = [];
-        this.mapReady = $.Deferred().done(function () {
+        this.mapReady = $.Deferred().done(function (map) {
             if (config.players) {
                 for (var i = config.players.length; i--;) {
                     this.addPlayer(config.players[i]);
                 }
             }
+            map.attachPlayers(this.players);
             this.ready.resolve(this);
         }.bind(this));
         Map.create(config.map).done(function (map) {

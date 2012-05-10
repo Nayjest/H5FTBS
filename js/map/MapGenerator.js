@@ -3,14 +3,8 @@ define(['map/Map'], function(Map){
     /**
     * @param Map|mapConfig|null map
     */
-    MapGenerator = function(){
-        if (arguments.length>0){
-            if (arguments[0] instanceof Map) {
-                this.map = arguments[0];
-            }else{
-                this.create(arguments[0]);
-            }
-        }           
+    MapGenerator = function(map){
+        if (map) this.create(map);
     }
     MapGenerator.prototype = {
         create:function(mapConfig) {

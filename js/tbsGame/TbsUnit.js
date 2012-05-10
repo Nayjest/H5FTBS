@@ -75,11 +75,6 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
             }
 
         },
-        placeTo:function (map, x, y) {
-            Me.superProto.placeTo.call(this, map, x, y);
-            map.units.push(this);
-            return this;
-        },
         isEnemy:function (unit) {
             return this.player.isEnemy(unit.player);
         },

@@ -2,12 +2,8 @@ define(['Game','Class'],function(Game){
 
     
     TurnBasedGame = function(config){
-        TurnBasedGame.superClass.call(this,config);
         this.turn = 0;
-        this.mapReady.done(function(){
-            this.newTurn();
-        }.bind(this));
-
+        TurnBasedGame.superClass.call(this,config);
     }
     TurnBasedGame.inheritsFrom(Game).extendProto({
         addPlayer:function(player){

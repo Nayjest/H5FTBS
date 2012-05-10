@@ -1,7 +1,7 @@
 /**
  *  module NonDomLayer
  */
-define(['layers/AbstractLayer', 'jquery', 'mouse'], function (AbstractLayer, $, mouse) {
+define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], function (AbstractLayer, $, mouse, LayerCollisions) {
     "use strict";
     // instances counter
     var _id = 0,
@@ -64,13 +64,17 @@ define(['layers/AbstractLayer', 'jquery', 'mouse'], function (AbstractLayer, $, 
         getCenterScreenPos:function () {
             var pos = this.getScreenPos();
             return [pos[0] + ~~(this.size[0] / 2), pos[1] + ~~(this.size[1] / 2)];
-        }
+        },
+        /**
+         *
+         * @param [int x, int y] point
+         */
+        isPointInside:LayerCollisions.circle.isPointInside
     });
 
 
     $('body').on('mousemove mousedown mouseup click', function (event) {
-        var lp, //position of iterated layer
-            mp = mouse.pos, //current mouse position
+        var mp = mouse.pos, //current mouse position
             l, //current layer
             layers = Me.prototype.instances, //all layers
             args; //arguments passed to callback @todo make it compatible with DOM/jquery events, pass same data
@@ -79,14 +83,8 @@ define(['layers/AbstractLayer', 'jquery', 'mouse'], function (AbstractLayer, $, 
                 continue;
             }
             l = layers[i];
-            lp = l.getScreenPos();
             args = [mp];
-            if (// mouse inside element
-                (mp[0] > lp[0])
-                    && (mp[0] < lp[0] + l.size[0])
-                    && (mp[1] > lp[1])
-                    && (mp[1] < lp[1] + l.size[1])
-                ) {
+            if (l.isPointInside(mp)) {
                 if (event.type == 'click') {
                     console.log('click on layer', l);
                 }

@@ -1,21 +1,19 @@
 define(
-    ['widgets/window/WindowWidget','widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
-    function (WindowWidget,Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, canvasUtils, utils, CanvasLayer) {
-
+    ['map/Map','widgets/window/WindowWidget','widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'apps/ftbs/play/src/bootstrap'],
+    function (Map, WindowWidget,Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $) {
+        console.log('MAP!!:',Map);
         return function () {
-
+            p1 = new Player;
+            p2 = new Player;
             //new WindowWidget({visible:false});
-            window.map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+            map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
             game = new TurnBasedGame({
                 map:map,
-                players:[
-                    new Player,
-                    new Player
-                ]
+                players:[p1,p2]
             });
 
 
-            window.sbar = new Sidebar({
+            sbar = new Sidebar({
                 onReady:function () {
                     window.map.$infoPanel = $('#mapInfo');
                 },
@@ -24,18 +22,18 @@ define(
 
 
             TbsUnit.load('unit/human/peasant/peasant', function (u) {
-                u1 = u.placeTo(map, 1, 1).setPlayer(1);
+                u1 = u.placeTo(map, 1, 1).setPlayer(p1);
             });
             TbsUnit.load('unit/human/peasant/peasant', function (u) {
-                u2 = u.placeTo(map, 1, 3).setPlayer(1);
+                u2 = u.placeTo(map, 1, 3).setPlayer(p1);
             });
 
             TbsUnit.load('unit/rat/shaman/shaman', function (u) {
-                u4 = u.placeTo(map, 6, 3).setPlayer(2);
+                u4 = u.placeTo(map, 6, 3).setPlayer(p2);
             });
 
             TbsUnit.load('unit/human/cleric/cleric', function (u) {
-                u5 = u.placeTo(map, 2, 4).setPlayer(1);
+                u5 = u.placeTo(map, 2, 4).setPlayer(p1);
             });
 
 
@@ -56,7 +54,7 @@ define(
                     size:[52, 80],
                     zIndex:600
                 }
-            }).placeTo(map, 7, 2).setPlayer(2);
+            }).placeTo(map, 7, 2).setPlayer(p2);
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

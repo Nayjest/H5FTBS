@@ -1,37 +1,31 @@
 /**
  * MapObject class
  */
-define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
+define(['layers/ImageLayer', 'Loadable', 'utils', 'map/MapObjectLayerBehavior'], function (ImageLayer, Loadable, utils, MapObjectLayerBehavior) {
 
-    var defaults = {
+    /**
+     * @param config
+     */
+    var MapObject = function (config) {
+        this._onLoad = [];
+        if (config) merge(this, config);
+        this._initLayer();
+    };
+    var Me = MapObject;
+
+    MapObject.prototype = {
+        /* ===============Defaults============== */
         layer:null,
         description:'No info',
-
         /**
          * @var bool|string|array
          * true: can pass any case
          * false: can't pass any case
          * MapCell.movementTypes.fly -- fly only (add limitations for all other)
          * [MapCell.movementTypes.fly, MapCell.movementTypes.walk] (add limitations for all other, no swim in this case)
-         *
          */
-        passable:false
-    }
-
-    /**
-     *
-     * @param config
-     */
-    var MapObject = function (config) {
-        var self = this;
-        this._onLoad = [];
-        if (config) merge(this, config);
-        mergeUndefined(this, defaults);
-        this._initLayer();
-    },
-        Me = MapObject;
-
-    MapObject.prototype = {
+        passable:false, //@todo rename to isPassable
+        /* =============End defaults============= */
         placeTo:function (map, x, y) {
             var self = this;
             this.map = map;
@@ -48,19 +42,13 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
             return this;
         },
         _initLayer:function () {
-            var self = this;
-            ImageLayer.load(this.layer, function (layer) {
-                layer.on('click', function () {
-                    self.select(self.map.game.currentPlayer);
-                });
-                layer.on('mouseover', function () {
-                    self.map.selectCell(self.mapCell);
-                });
-                self.layer = layer;
-                self.ready = true;
-                self._doOnLoad();
-
-            });
+            // @todo Replace to some abstract layer
+            ImageLayer.create(this.layer).done(function (layer) {
+                MapObjectLayerBehavior(this, layer)
+                this.layer = layer;
+                this.ready = true;
+                this._doOnLoad();
+            }.bind(this));
         },
         onLoad:function (callback) {
             if (!this.ready)
@@ -78,18 +66,15 @@ define(['layers/ImageLayer', 'Loadable'], function (ImageLayer) {
         },
         destroy:function () {
 
-            if (this.map) {
-                for (var i in this.map.objects) {
-                    if (this.map.objects[i] == this) {
-                        this.map.objects.splice(i, 1);
-                    }
-                }
+            if (this.map && this.map.objects) {
+                utils.removeFromArray(this, this.map.objects)
             }
-            if (typeof this.layer === 'object') {
+            if (this.layer && this.layer.destroy) {
                 this.layer.destroy();
             }
         },
         select:function () {
+            //@todo
             console.log('selected!');
         },
 

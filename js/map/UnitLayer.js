@@ -1,5 +1,6 @@
 /**
  * @todo don't include Canvas when it's not canvas mode
+ * @todo implement as mixin
  */
 define(['layers/ImageLayer', 'Canvas', 'layers/components/Highlight', 'Class'], function (ImageLayer, Canvas) {
     var _canvas;

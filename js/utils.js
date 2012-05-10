@@ -30,5 +30,14 @@ define([], function () {
         });
     }
 
+    Me.removeFromArray = function(element, array){
+        var pos = array.indexOf(element);
+        if (pos===-1) {
+            return false;
+        } else {
+            array.splice(pos,1);
+        }
+    }
+
     return Me;
 });

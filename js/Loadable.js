@@ -173,7 +173,6 @@ define(['jquery', 'Class'], function ($) {
 
         var deferred = $.Deferred(),
             process = function (data) {
-                var data;
                 if (typeof(data) === 'string') {
                     eval('data = ' + data);
                 }

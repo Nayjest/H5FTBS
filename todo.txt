@@ -50,9 +50,14 @@
 
 * Проблемы с режимом fit в старом фаерфоксе
 
+
+* set writeable: false for constants
+
 * Javascript canvas pixel debug
 
 * draw/filter function transformArgs using decorators
+
+* Implement resource loading via amd loader plugins
 
 * Implement mouseover detection considering gex geometry
 
@@ -68,17 +73,30 @@
 
 * Optimise DrawManager
 
+
 * Script for javascript parsing & optimisation (for example, replace slow navive getters/setters to setProp()/getProp() methods)
 
-* Use void 0 insted of undefined
+* Use void 0 instead of undefined and "prop in Obj" check instead trying to get it
+
+* Implement mouseover detection considering gex geometry
+
+* Move common part of code in MapCell & MapObject to some base class (BaseObject?)
+
+* Map.constructor: Implement objects & units initialization same way as with mapCells. Try to use Class.load insted of type check (deferred/config/instance/src)
+
+* Move decorators to lib, create documentation & publish on github
 
 * DirectCanvas, AppMobi, phoneGap
 
-* Store default values in prototype, don't merge it to class instances
+* Implement resource loading via amd loader plugins
 
 * Test on slow connections via Fiddler
 
-* Implement WebGL layers
+* PhantomJS + JSCoverage + QUnit, see http://habrahabr.ru/post/135979/ 
+
+* DirectCanvas, AppMobi, phoneGap
+
+* Test on slow connections via Fiddler
 
 * PhantomJS + JSCoverage + QUnit, see http://habrahabr.ru/post/135979/ 
 ___________________________________________________________________________________
@@ -88,6 +106,13 @@ ________________________________________________________________________________
 Done:
 
 * Implement func. decorators (append, prepend),
+
+___________________________________________________________________________________
+Working on:
+
+* WebGL2d layers
+
+* Store default simple(!) values in prototype, don't merge it to class instances
 
 ___________________________________________________________________________________
 Partially:

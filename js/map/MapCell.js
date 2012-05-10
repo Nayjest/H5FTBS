@@ -1,5 +1,4 @@
-define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], function (ImageLayer, Highlight, $, Utils) {
-
+define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', 'map/MapCellLayer'], function (ImageLayer, Highlight, $, Utils, MapCellLayer) {
     var mapCellTypes = {
         road:0,
         plane:{
@@ -17,13 +16,12 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
         ice:8,
         lava:9,
         wall:10
-    }
+    },
 
-    var defaults = {
+    defaults = {
         type:mapCellTypes.plane,
         layer:{}
-    }
-
+    },
     MapCell = function (config) {
         var self = this;
         this._onLoad = [];
@@ -32,9 +30,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
         if (this.map) {
             this.map.cells[this.x][this.y] = this;
         }
-        ImageLayer.load(this.layer, function (obj) {
-
-            obj.highlight = new Highlight(obj, {});
+        MapCellLayer.load(this.layer, function (obj) {
             obj.on('mouseover', function (e) {
                 self.map.selectCell(self);
             });
@@ -43,9 +39,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
             if (config.map && typeof(config.x) == 'number' && typeof(config.y) == 'number') {
                 self.placeTo(config.map, config.x, config.y);
             }
-            for (var i = self._onLoad.length;i--;) {
-                self._onLoad[i](self);
-            }
+            self._doOnLoad();
         });
     }
 
@@ -55,6 +49,14 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils'], 
     MapCell.descriptions[MapCell.types.plane] = 'Равнина';
 
     MapCell.prototype = {
+        /**
+         * Execute onload handlers
+         */
+        _doOnLoad:function () {
+            for (var i = 0 ; i<this._onLoad.length;i++) {
+                this._onLoad[i](this);
+            }
+        },
         placeTo:function (map, x, y) {
             var me = this;
             me.map = map;

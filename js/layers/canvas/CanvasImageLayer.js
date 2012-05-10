@@ -2,14 +2,9 @@
  *  module CanvasImageLayer
  */
 define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLayer, $) {
-
-    // radians in one degree
-    var radInDeg = Math.PI / 180;
     var Me, CanvasImageLayer;
     Me = CanvasImageLayer = function (config) {
-        var me = this;
         var options = merge({}, config);
-        mergeUndefined(options, defaults);
         Me.superClass.call(this, options);
         this.setImage(options.image);
     }
@@ -29,10 +24,14 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
         /** original image size */
         ORIGINAL:3
     }
-    var defaults = {
+
+    Me.inheritsFrom(CanvasLayer).extendProto({
+        /* defaults */
         image:null,
         fit:Me.fit.SCALE,
         ready:false,
+        flipVertical:false,
+        flipHorizontal:false,
         drawMethod:function () {
             if (!this.ready) return;
             var ctx = this.ctx;
@@ -43,21 +42,21 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
                     ctx.drawImage(this.image, offset[0] - this._w, offset[1] - this._h, this.size[0], this.size[1]);
                     break;
                 case Me.fit.FIT:
-                    ctx.drawImage(this.image, offset[0] - this._w, offset[1] - this._h, this._w*2, this._h*2);
+                    ctx.drawImage(this.image, offset[0] - this._w, offset[1] - this._h, this._w * 2, this._h * 2);
                     break;
                 case Me.fit.COVER:
                     throw Error('Not implemented yet');//@todo
                     break;
                 case Me.fit.ORIGINAL:
-                    ctx.drawImage(this.image, offset[0] - ~~(this.image.width/2), offset[1] - ~~(this.image.height/2), this.image.width, this.image.height);
+                    ctx.drawImage(this.image, offset[0] - ~~(this.image.width / 2), offset[1] - ~~(this.image.height / 2), this.image.width, this.image.height);
                     break;
                 default:
                     throw new Error('Unsupported image fit mode.');
             }
 
-        }
-    }
-    Me.inheritsFrom(CanvasLayer).extendProto({
+        },
+        /* end of defaults*/
+
         onLoad:function (callback) {
             this.loaded.done(callback);
             return this;
@@ -111,6 +110,7 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
                     //@todo
                     break;
                 case Me.fit.FIT:
+                    /* @todo test with different proportions, it's some bug here #39 */
                     if (this.image.width / this.image.height > size[0] / size[1]) {
                         this._w = ~~(size[0] / 2);
                         this._h = ~~(size[0] / this.image.width * this.image.height / 2);
@@ -130,6 +130,7 @@ define(['layers/canvas/CanvasLayer', 'jquery' , 'Loadable'], function (CanvasLay
             Me.superProto.setSize.call(this, size);
         }
     });
-
+    // for detecting what implementation (Dom or Canvas)is used for displaying images
+    Me.isCanvasEngine = true;
     return CanvasImageLayer;
 });

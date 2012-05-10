@@ -1,9 +1,14 @@
 define(
-    ['widgets/sidebar/sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'jquery'],
-    function (sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, $) {
-        return function () {
+    ['widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'canvas/canvasUtils', 'utils', 'layers/canvas/CanvasLayer', 'apps/ftbs/play/src/bootstrap'],
+    function (Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, canvasUtils, utils, CanvasLayer) {
 
-            map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+        return function () {
+            window.map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
+            window.sbar = new Sidebar({
+                onReady:function () {
+                    window.map.$infoPanel = $('#mapInfo');
+                }
+            });
 
             game = new TurnBasedGame({
                 map:map,
@@ -24,12 +29,17 @@ define(
                 u4 = u.placeTo(map, 6, 3).setPlayer(2);
             });
 
+            TbsUnit.load('unit/human/cleric/cleric', function (u) {
+                u5 = u.placeTo(map, 2, 4).setPlayer(1);
+            });
+
 
             stone = new MapObject({
                 passable:false,
                 layer:{
                     image:'/res/map/terrain/stone/img/5_blue_spiral.png',
-                    size:[50, 50]
+                    size:[50, 50],
+                    zIndex:999
                 }
             }).placeTo(map, 3, 1);
 

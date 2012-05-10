@@ -1,11 +1,15 @@
 /**
  * Implements delayed batch drawing with support of zIndex
  */
-define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
-
-    var layers = [],
+define(['layers/canvas/CanvasLayer', 'Canvas', 'jquery'], function (CanvasLayer, Canvas, $) {
+    "use strict";
+    //Get global object (window in browser) in strict mode
+    var FN = Function,
+        glob = FN('return this')(),
         _canvasesToRedraw = {},
-        undefined;
+        undefined = void(0),
+        settings = glob.settings?glob.settings:{};
+        if (!settings.redrawInterval) settings.redrawInterval = 30;
 
     var drawList = new (function () {
 
@@ -36,7 +40,7 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
                     }
                 }
                 //insert layer at [i] position
-                layers.splice(i,0,layer);
+                layers.splice(i, 0, layer);
             }
         }
 
@@ -60,9 +64,9 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
 
         /**
          * Draw all layers on canvas
-          * @param int canvasId
+         * @param int canvasId
          */
-        this.draw = function(canvasId) {
+        this.draw = function (canvasId) {
             if (Canvas.instances[canvasId]) {
                 Canvas.instances[canvasId].clear();
             } else {
@@ -72,10 +76,18 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
             if (!canvasList || canvasList.length === 0) {
                 return;
             }
-            for (var i = canvasList.length;i--;) {
+            for (var i = canvasList.length; i--;) {
                 if (canvasList[i].visible) {
                     canvasList[i].drawMethod();
                 }
+            }
+        }
+        /**
+         * Draw all layers on all canvases
+         */
+        this.drawAll = function () {
+            for (var i = Canvas.instances.length; i--;) {
+                this.draw(i);
             }
         }
 
@@ -94,10 +106,10 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
 
         /**
          *
-          * @param int zIndex
+         * @param int zIndex
          */
-        CanvasLayer.prototype.setZIndex = function(zIndex) {
-            _setZIndex.call(this,zIndex)
+        CanvasLayer.prototype.setZIndex = function (zIndex) {
+            _setZIndex.call(this, zIndex)
             drawList.remove(this);
             drawList.add(this);
             return this;
@@ -131,20 +143,25 @@ define(['layers/canvas/CanvasLayer', 'Canvas'], function (CanvasLayer, Canvas) {
     function redraw() {
         for (var i in _canvasesToRedraw) {
             if (_canvasesToRedraw.hasOwnProperty(i) && _canvasesToRedraw[i]) {
-                //console.log('redraw canvas ',i);
                 drawList.draw(i);
+                _canvasesToRedraw[i] = false;
+
             }
         }
     }
 
     function startLoop() {
-        setInterval(redraw, 10);
+        setInterval(redraw, settings.redrawInterval);
     }
 
     var DrawManager = {
         init:function () {
+            var window = glob;
             mutateCanvasLayer();
             startLoop();
+            $(window).resize(function (event) {
+                drawList.drawAll();
+            });
         }
     }
     DrawManager.init();

@@ -5,25 +5,25 @@ define(['Node', 'Class'], function (Node) {
 
     var Me = function (config) {
         if (config) merge(this, config);
-        mergeUndefined(this, {
-            /* layer size in pixels */
-            size:[100, 100],
-            /* offset in pixels */
-            offset:[0, 0],
-            angle:0,
-            zoom:1
-        });
-        this.setZIndex(config.zIndex?config.zIndex:1);
+        this.setZIndex(config.zIndex ? config.zIndex : 1);
         Node.call(this, config.parent, config.children);
     }
 
     Me.extendProto(Node.prototype, {
+        /* defaults */
+        /* layer size in pixels */
+        size:[100, 100],
+        /* offset in pixels */
+        offset:[0, 0],
+        angle:0,
+        zoom:1,
+        /* end defaults */
 
         /**
          *
          * @param int zIndex
          */
-        setZIndex: function(zIndex) {
+        setZIndex:function (zIndex) {
             this.zIndex = zIndex;
         },
 
@@ -32,22 +32,44 @@ define(['Node', 'Class'], function (Node) {
          */
         update:function () {
             //update children elements
-            for (var i = this.children.length;i--;) {
-                this.children[i].update();
+            for (var i in this.children) {
+                if (this.children.hasOwnProperty(i)) {
+                    this.children[i].update();
+                }
             }
             return this;
         },
 
-        //not used yet in DomLayer
+        setOffset:function (offset) {
+            this.offset = offset.slice(0);
+            return this;
+        },
+        setSize:function (size) {
+            this.size = size.slice(0);
+            return this;
+        },
+
+        /**
+         *
+         * @param callback
+         */
+        onLoad:function (callback) {
+            /* @todo refine callbackarguments */
+            callback.call(this, this);
+        },
+
+        /**
+         * @return int[]
+         */
         getAbsoluteOffset:function () {
-            var layer = this;
-            var x = this.offset[0],
+            var layer = this,
+                x = this.offset[0],
                 y = this.offset[1];
             while (layer = layer.parent) {
                 x += layer.offset[0];
                 y += layer.offset[1];
             }
-            return [x,y];
+            return [x, y];
         },
         getZoom:function () {
             var zoom = this.zoom;

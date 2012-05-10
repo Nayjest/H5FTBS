@@ -1,6 +1,6 @@
 define(
-    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'Mouse', 'Canvas', 'layers/canvas/CanvasLayer', 'layers/canvas/CanvasImageLayer', 'layers/DomLayer', 'layers/DomImageLayer'  , 'jquery'],
-    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, Mouse, Canvas, CanvasLayer, CanvasImageLayer, DomLayer, DomImageLayer, $) {
+    ['map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'Canvas', 'layers/canvas/CanvasLayer', 'layers/canvas/CanvasImageLayer', 'layers/DomLayer', 'layers/DomImageLayer'  , 'jquery'],
+    function (MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, Canvas, CanvasLayer, CanvasImageLayer, DomLayer, DomImageLayer, $) {
         return function () {
             canvas = new Canvas({
                 size:[$('body').width(), $('body').height()],

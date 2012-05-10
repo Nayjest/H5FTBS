@@ -34,9 +34,9 @@
 
 * Сделать, чтобы СanvasEventHandler проходил только по элементам, для которых назначены обработчики событий (добавлять канвасЛайер в список только при назначении .on(evt,callback), подумать по поводу иерархии лейеров и событий)
 
-* Fix bug with module system: error when make Gex not global (maby I need to implement class loading via require.js in Loading.js)
+* Fix bug with module system: error when make Gex not global (maybe I need to implement class loading via require.js in Loading.js)
 
-* Проблемка: Utils нельзя сделать НЕ глобальной переменной, т.к. иначе при загрузке js файлов чере Loadable объект не доступен
+* Проблемка: Utils нельзя сделать НЕ глобальной переменной, т.к. иначе при загрузке js файлов чере Loadable объект не доступен. Upd: use require('utils') and remove exporting utils to global object from utils module.
 
 *zIndex для отрисовки через Канвас
 
@@ -44,13 +44,34 @@
 
 *Bug: после убийства юнита при попытке подсветить ходы для других юнитов: Uncaught TypeError: Cannot read property 'mapCell' of undefined Map:112, before MapCell:112, Before:TbsUnit:123
 
-*Unit tests for JS
-
 * Make game work offline http://hernan.amiune.com/teaching/HTML5-Game-Development-Tips.html
 
-* make appcache manifest generator
+*make appcache manifest generator
 
 * set writeable: false for constants
+
+* Проблемы с режимом fit в старом фаерфоксе
+
+* Implement resource loading via amd loader plugins
+
+* Javascript canvas pixel debug
+
+* Optimise DrawManager
+
+* draw/filter function transformArgs using decorators
+
+* Script for javascript parsing & optimisation (for example, replace slow navive getters/setters to setProp()/getProp() methods)
+
+* Use void 0 instead of undefined and "prop in Obj" check instead trying to get it
+* Implement mouseover detection considering gex geometry
+
+* Move common part of code in MapCell & MapObject to some base class (BaseObject?)
+
+* Map.constructor: Implement objects & units initialization same way as with mapCells. Try to use Class.load insted of type check (deferred/config/instance/src)
+
+* Move decorators to lib, create documentation & publish on github
+
+* set writeableble: false for constants
 
 * Implement resource loading via amd loader plugins
 
@@ -58,4 +79,26 @@
 
 * Script for javascript parsing & optimisation (for example, replace slow navive getters/setters to setProp()/getProp() methods)
 
-* Use void 0 instead of undefined and "prop in Obj" check instead trying to get it
+* Use void 0 insted of undefined
+
+* DirectCanvas, AppMobi, phoneGap
+
+* Store default values in prototype, don't merge it to class instances
+
+* Test on slow connections via Fiddler
+
+* Implement WebGL layers
+
+* PhantomJS + JSCoverage + QUnit, see http://habrahabr.ru/post/135979/ 
+___________________________________________________________________________________
+Review:
+
+___________________________________________________________________________________
+Done:
+
+* Implement func. decorators (append, prepend),
+
+___________________________________________________________________________________
+Partially:
+
+*Unit tests for JS

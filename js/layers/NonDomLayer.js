@@ -1,7 +1,7 @@
 /**
  *  module NonDomLayer
  */
-define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], function (AbstractLayer, $, mouse, LayerCollisions) {
+define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions', 'Class'], function (AbstractLayer, $, mouse, LayerCollisions, OOP) {
     "use strict";
     // instances counter
     var _id = 0,
@@ -45,6 +45,16 @@ define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], f
                 this._eventHandlers[eventName] = callbacks;
             }
             callbacks.add(handler);
+            return this;
+        },
+        resetEventHandlers:function(){
+            this.handlers = {};
+            return this;
+        },
+        setEventHandlers:function(handlers){
+            this.resetEventHandlers();
+            OOP.merge(this.handlers, handlers);
+            return this;
         },
         fireEvent:function (eventName, options) {
             var $callbacks = this._eventHandlers[eventName];

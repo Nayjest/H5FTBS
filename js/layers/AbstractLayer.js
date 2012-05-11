@@ -1,7 +1,7 @@
 /**
  *  module AbstractLayer
  */
-define(['Node', 'Class'], function (Node) {
+define(['Node', 'Class'], function (Node, OOP) {
 
     var defaults = {
         x:0,
@@ -22,6 +22,9 @@ define(['Node', 'Class'], function (Node) {
         angle:0,
         zoom:1,
         /* end defaults */
+
+        show:OOP.abstractMethod(),
+        hide:OOP.abstractMethod(),
 
         /**
          *

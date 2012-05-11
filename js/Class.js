@@ -70,11 +70,25 @@ define([], function() {
         var _config = merge({},config);
         return new _class(_config);
     }
-    
+
+
     global.merge = merge;
     global.mergeUndefined = mergeUndefined;
     global.construct = construct;
-
+    function abstractMethodBody(){
+        if (console) {
+            console.log('Erroe: Trying to call abstract method. Arguments:',arguments);
+        }
+        throw new Error('Trying to call abstract method. Implementation required.');
+    }
+    return {
+        merge:merge,
+        mergeUndefined:mergeUndefined,
+        construct:construct,
+        abstractMethod:function() {
+            return abstractMethodBody;
+        }
+    }
 });
 
 /*

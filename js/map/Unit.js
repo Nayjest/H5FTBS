@@ -58,7 +58,6 @@ define(['map/MapObject', 'layers/ImageLayer', 'layers/NonDomLayer', 'Canvas', 'u
                     self.select(self.map.game.currentPlayer);
                 });
                 layer.on('mouseover', function () {
-                    console.log('works1');
                     self.map.selectCell(self.mapCell);
                 });
                 self._doOnLoad();

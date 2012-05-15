@@ -7,15 +7,15 @@ define(['layers/ImageLayer', 'Loadable', 'utils', 'map/MapObjectLayerBehavior'],
      * @param config
      */
     var MapObject = function (config) {
-        this._onLoad = [];
         if (config) merge(this, config);
-        this._initLayer();
+        //@deprecated @compatibility
+        if (!this.layerSrc && this.layer) this.layerSrc = this.layer;
     };
     var Me = MapObject;
 
     MapObject.prototype = {
         /* ===============Defaults============== */
-        layer:null,
+        layerSrc:null,
         description:'No info',
         /**
          * @var bool|string|array
@@ -30,54 +30,22 @@ define(['layers/ImageLayer', 'Loadable', 'utils', 'map/MapObjectLayerBehavior'],
             var self = this;
             this.map = map;
             this.mapCell = map.cells[x][y];
-            this.mapCell.onLoad(function (cell) {
-                self.onLoad(function () {
-                    self.layer
-                        .setParent(map.layer)
-                        .setOffset(cell.layer.offset)
-                        .update();
-                })
-            });
             map.objects.push(this);
             return this;
         },
-        _initLayer:function () {
-            // @todo Replace to some abstract layer
-            ImageLayer.create(this.layer).done(function (layer) {
-                MapObjectLayerBehavior(this, layer)
-                this.layer = layer;
-                this.ready = true;
-                this._doOnLoad();
-            }.bind(this));
-        },
-        onLoad:function (callback) {
-            if (!this.ready)
-                this._onLoad.push(callback);
-            else
-                callback(this);
-        },
         /**
-         * Execute onload handlers
+         * @deprecated @compatibility
+         * @param callback
          */
-        _doOnLoad:function () {
-            for (var i = 0; i < this._onLoad.length; i++) {
-                this._onLoad[i](this);
-            }
+        onLoad:function (callback) {
+                callback(this);
         },
         destroy:function () {
 
             if (this.map && this.map.objects) {
                 utils.removeFromArray(this, this.map.objects)
             }
-            if (this.layer && this.layer.destroy) {
-                this.layer.destroy();
-            }
         },
-        select:function () {
-            //@todo
-            console.log('selected!');
-        },
-
         getInfo:function () {
             return this.description;
         }

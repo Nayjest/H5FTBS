@@ -7,21 +7,13 @@ define(['layers/AbstractLayer', 'jquery'], function (AbstractLayer, $) {
             AbstractLayer.create(cell.layerSrc).done(function (layer) {
                 this.layer = layer;
                 layer.setParent(mapPresenter.layer)
-                layer.setOffset(this._calculateLayerOffset());
+                layer.setOffset(cell._calculateLayerOffset());
+                layer._setLayerEventHandlers();
             }.bind(this))
         );
     }
-
     var Me = MapCellPresenter;
-    Me.prototype = {
-        _calculateLayerOffset:function () {
-            var cell = this.cell;
-            if (!cell.map) return [0, 0];
-            return [
-                (cell.x - cell.map.size[0] / 2) * cell.map.cellSize[0],
-                (cell.y - cell.map.size[1] / 2) * cell.map.cellSize[1]
-            ];
-        },
+    MapCellPresenter.prototype = {
         _setLayerEventHandlers:function () {
             var layer = this.layer;
             layer.on('mouseover', function (e) {
@@ -32,6 +24,5 @@ define(['layers/AbstractLayer', 'jquery'], function (AbstractLayer, $) {
             }.bind(this));
         }
     }
-
-
+    return Me;
 });

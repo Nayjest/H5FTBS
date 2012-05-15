@@ -47,7 +47,6 @@ define(
             this.size = options.size;
             this.cellSize = options.cellSize;
             this.ready = $.Deferred();
-            this._createLayer();
             this._initCells(options.cells.slice(0)).done(function () {
                 $.when(
                     me._initObjects(options.objects.slice(0)),
@@ -107,15 +106,6 @@ define(
                     obj.placeTo(map, obj.x, obj.y);
                 });
             },
-            _createLayer:function () {
-                this.layer = new DomLayer({
-                    size:[this.size[0] * this.cellSize[0], this.size[1] * this.cellSize[1]],
-                    css:{
-                        marginTop:this.size[1] * this.cellSize[1] + 105
-                        //outline:'1px solid red'
-                    }
-                });
-            },
             _clearCells:function () {
                 this.cells = [];
                 for (var x = 0; x < this.size[0]; x++) {
@@ -173,6 +163,12 @@ define(
                         }
                     }
                 }
+            },
+            /**
+             * @return {MapCell[]} map cells as plain array
+             */
+            getCellsPlain:function() {
+                return Array.prototype.concat.apply([],this.cells);
             }
         }
 

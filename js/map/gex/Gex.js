@@ -18,14 +18,14 @@ define(
         }
         Gex.inheritsFrom(MapCell).extendProto({
 
-            _setupLayerOffset:function () {
+            _calculateLayerOffset:function () {
                 var x = this.x;
                 var y = this.y;
                 var map = this.map;
-                this.layer.setOffset([
+                return [
                     (x * 0.991 - map.size[0] / 2) * map.cellSize[0] * 3 / 4,
                     (y * 0.991 - map.size[1] / 2 + ((x % 2 == 0) ? 0.5 : 0)) * map.cellSize[1]
-                ]);
+                ];
             },
 
             /**
@@ -129,14 +129,14 @@ define(
                 return {
                     _class:'Gex',
                     type:MapCell.types.plane,
-                    layer:'map/cell/gex/grass/layer',
+                    layerSrc:'map/cell/gex/grass/layer',
                 };
             },
             test:function () {
                 return {
                     _class:'Gex',
                     type:MapCell.types.plane,
-                    layer:{
+                    layerSrc:{
                         tag:'img',
                         attr:{
                             src:'/img/terrain/gex/test.png',

@@ -12,16 +12,18 @@ define(['layers/AbstractLayer', 'jquery'], function (AbstractLayer, $) {
     }
 
     var Me = MapCellHighlight;
-    Me.prototype = {
+    MapCellHighlight.prototype = {
         layerSrc:null,
         useCellEventHandlers:true,
-        setCell:function (cellPresenter) {
+        setCell:function(cellPresenter) {
             this.cellPresenter = cellPresenter;
             if (cellPresenter) {
                 this.layer.setOffset(cellPresenter.layer.offset).show();
                 //@todo implement layer.getEventHandlers
                 //@todo set by link??
-                if (this.useCellEventHandlers) this.layer.setEventHandlers(cellPresenter.layer.getEventHandlers());
+                if (this.useCellEventHandlers) {
+                    this.layer.setEventHandlers(cellPresenter.layer.getEventHandlers());
+                }
             } else {
                 this.layer.hide();
             }
@@ -32,5 +34,6 @@ define(['layers/AbstractLayer', 'jquery'], function (AbstractLayer, $) {
         hide:function () {
             this.layer.hide();
         }
-    }
+    };
+    return MapCellHighlight;
 });

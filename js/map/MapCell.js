@@ -20,27 +20,27 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
 
     defaults = {
         type:mapCellTypes.plane,
-        layer:{}
+        layerSrc:{}
     },
     MapCell = function (config) {
-        var self = this;
-        this._onLoad = [];
         if (config) merge(this, config);
         mergeUndefined(this, defaults);
         if (this.map) {
             this.map.cells[this.x][this.y] = this;
         }
-        MapCellLayer.load(this.layer, function (obj) {
-            obj.on('mouseover', function (e) {
-                self.map.selectCell(self);
-            });
-            self.layer = obj;
-            self.ready = true;
-            if (config.map && typeof(config.x) == 'number' && typeof(config.y) == 'number') {
-                self.placeTo(config.map, config.x, config.y);
-            }
-            self._doOnLoad();
-        });
+        this.layerSrc = this.layer;
+        delete(this.layer);
+//        MapCellLayer.load(this.layer, function (obj) {
+//            obj.on('mouseover', function (e) {
+//                self.map.selectCell(self);
+//            });
+//            self.layer = obj;
+//            self.ready = true;
+//            if (config.map && typeof(config.x) == 'number' && typeof(config.y) == 'number') {
+//                self.placeTo(config.map, config.x, config.y);
+//            }
+//            self._doOnLoad();
+//        });
     }
 
     MapCell.types = mapCellTypes;
@@ -49,14 +49,6 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
     MapCell.descriptions[MapCell.types.plane] = 'Равнина';
 
     MapCell.prototype = {
-        /**
-         * Execute onload handlers
-         */
-        _doOnLoad:function () {
-            for (var i = 0 ; i<this._onLoad.length;i++) {
-                this._onLoad[i](this);
-            }
-        },
         placeTo:function (map, x, y) {
             var me = this;
             me.map = map;
@@ -68,24 +60,11 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
             me.x = x;
             me.y = y;
             map.cells[x][y] = me;
-            me.onLoad(function () {
-                me._setupLayer()
-            });
             return me;
-        },
-        onLoad:function (callback) {
-            if (!this.ready)
-                this._onLoad.push(callback);
-            else
-                callback(this);
-            return this;
         },
         free:function () {
             var me = this;
             if (me.map.cells[me.x] && me.map.cells[me.x][me.y]) me.map.cells[me.x][me.y] = null;
-            me.onLoad(function () {
-                me.layer.destroy();
-            });
         },
         nearby:function () {
             var self = this;
@@ -176,20 +155,13 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
             return selected;
 
         },
-
-        _setupLayer:function () {
-            this.layer
-                .setParent(this.map.layer);
-            //.setSize(this.map.cellSize);
-            this._setupLayerOffset();
-            return this;
-        },
-        _setupLayerOffset:function () {
-            this.layer.setOffset([
+        _calculateLayerOffset:function () {
+            return [
                 (this.x - this.map.size[0] / 2) * this.map.cellSize[0],
                 (this.y - this.map.size[1] / 2) * this.map.cellSize[1]
-            ]);
+            ];
         },
+        //@deprecated
         select:function () {
             this.map.selectCell(this);
         },
@@ -206,6 +178,14 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
 
         getObjects:function () {
             return this.map.getObjectsAt(this.x, this.y);
+        },
+        /**
+         * @deprecated
+         * @compatibility
+         * @param callback
+         */
+        onLoad:function (callback) {
+            callback(this);
         }
 
     }
@@ -215,7 +195,7 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
             return {
                 _class:'MapCell',
                 type:MapCell.types.plane,
-                layer:{
+                layerSrc:{
                     tag:'img',
                     attr:{
                         src:'/img/terrain/grass1/grass1_r1.png'

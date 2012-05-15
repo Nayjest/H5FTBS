@@ -1,12 +1,12 @@
 /**
-*  Module JqueryEventsMixin
-*   
-* 
-*  Usage: extend your class prototype by this object
-*  Example: MyClass.extendProto(JqueryEventsMixin)
-*/
-define(['jquery'], function($) {
-    
+ *  Module JqueryEventsMixin
+ *
+ *
+ *  Usage: extend your class prototype by this object
+ *  Example: MyClass.extendProto(JqueryEventsMixin)
+ */
+define(['jquery'], function ($) {
+
     var supportedEvents = [
         'mousedown',
         'mouseenter',
@@ -14,15 +14,28 @@ define(['jquery'], function($) {
         'mousemove',
         'mouseout',
         'mouseover',
-        'mouseup',
+        'mouseup'
     ]
-    var Me = {
-        _targetElement:'$el',
+    var me = {
+        _targetElement:'$el'
     };
-    Me.on = function(eventName, eventHandler) {
-        return this[this._targetElement].on(eventName,eventHandler);
+    me.on = function (eventName, eventHandler) {
+        this[this._targetElement].on(eventName, eventHandler);
+        return this;
     }
-    
-    return Me;
+    me.resetEventHandlers = function () {
+        this[this._targetElement].unbind();
+    }
+    me.setEventHandlers = function (handlers) {
+        this.resetEventHandlers();
+        for (var eventName in handlers) {
+            if (handlers.hasOwnProperty(eventName)) {
+                this[this._targetElement].on(eventName, handlers[eventHandler]);
+            }
+        }
+        return this;
+    };
+
+    return me;
 
 });

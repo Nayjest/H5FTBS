@@ -8,11 +8,19 @@ define(['jquery','Class'], function ($) {
         speed:4
     }
 
-    AnimationManager = function (config) {
+    function AnimationManager (config) {
         if (!config) config = {};
         if (config) mergeUndefined(this, config);
         mergeUndefined(this, defaults);
-
+        Me.instances.push(this);
+    };
+    var Me = AnimationManager;
+    Me.instances = [];
+    Me.getInstance = function(){
+        if (!Me.instances.length) {
+            new AnimationManager();
+        }
+        return Me.instances[Me.instances.length-1];
     }
 
     AnimationManager.prototype = {

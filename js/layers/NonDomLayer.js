@@ -1,10 +1,11 @@
 /**
  *  module NonDomLayer
  */
-define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], function (AbstractLayer, $, mouse, LayerCollisions) {
+define(['layers/AbstractLayer', 'jquery', 'mouse', 'layers/LayerCollisions'], function (AbstractLayer, $, mouse, LayerCollisions) {
     "use strict";
     // instances counter
     var _id = 0,
+        _stopEvent = false,
         _screen_half_w,
         _screen_half_h,
         _onWindowResize = function () {
@@ -52,6 +53,9 @@ define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], f
                 $callbacks.fireWith(this, options);
             }
         },
+        stopEvent:function () {
+            _stopEvent = true;
+        },
         /**
          * Position of the top left
          * @todo window.pageXOffset if not crossbrowser feature
@@ -74,11 +78,17 @@ define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], f
 
 
     $('body').on('mousemove mousedown mouseup click', function (event) {
+        _stopEvent = false;
         var mp = mouse.pos, //current mouse position
             l, //current layer
             layers = Me.prototype.instances, //all layers
             args; //arguments passed to callback @todo make it compatible with DOM/jquery events, pass same data
         for (var i in layers) {
+            if (_stopEvent) {
+                _stopEvent = false;
+                break;
+            }
+
             if (!layers.hasOwnProperty(i) || !layers[i].visible) {
                 continue;
             }
@@ -102,6 +112,6 @@ define(['layers/AbstractLayer', 'jquery', 'mouse',  'layers/LayerCollisions'], f
     });
 
 
-    return Me;
+    return NonDomLayer;
 
 });

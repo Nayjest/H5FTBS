@@ -1,10 +1,10 @@
-define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager) {
+define(['map/Map', 'Class', 'EventDispatcher'], function (Map, OOP, EventDispatcher) {
 
     /**
      *
      * @param config
      */
-    Game = function (config) {
+    function Game (config) {
         this.ready = $.Deferred();
         this.players = [];
         this.mapReady = $.Deferred().done(function (map) {
@@ -23,10 +23,9 @@ define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager
                 this.mapReady.resolve(map);
             }.bind(this));
         }.bind(this));
-        this.animationManager = new AnimationManager();
     }
-
-    Game.prototype = {
+    Game.inheritsFrom(EventDispatcher);
+    Game.extendProto({
         addPlayer:function (player) {
             player.connectToGame(this);
         },
@@ -35,9 +34,7 @@ define(['map/Map', 'AnimationManager', 'Class'], function (Map, AnimationManager
                 if (this.players[i].id == id) return this.players[i];
             }
         }
-
-    }
-
+    });
     return Game;
 
 });

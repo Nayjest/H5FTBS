@@ -9,7 +9,7 @@ define(
         'jquery',
         'Class'
     ],
-    function (MapCell, MapObject, Unit, TbsUnit, DomLayer, ImageLayer, $) {
+    function (MapCell, MapObject, Unit, TbsUnit, DomLayer, ImageLayer, $, OOP) {
         // Terrain levels for drawing order
         var zLevels = {
             back:[0],
@@ -30,11 +30,6 @@ define(
         var defaults = {
             size:[10, 10], //size in cells
             cellSize:[74, 64], // cell sizein pixels
-            selectedCellHoverLayer:{ // config of layer that is drawed when
-                image:'/img/cursor/gex.png',
-                zIndex:zLevels.mapCellHighlight
-            },
-            $infoPanel:'#mapInfo', // jquery object that represents dom element of info panel
             objects:[], // configuration or instances of map objects
             units:[],
             cells:[]
@@ -43,7 +38,7 @@ define(
         var Map = function (config) {
             var options = merge({}, config),
                 me = this;
-            mergeUndefined(options, defaults);
+            OOP.mergeUndefined(options, defaults);
             this.size = options.size;
             this.cellSize = options.cellSize;
             this.ready = $.Deferred();
@@ -59,12 +54,6 @@ define(
 
             //MapCell selected at current moment
             this.selectedCell = null;
-            this.selectedCellHoverLayer = new ImageLayer(options.selectedCellHoverLayer);
-            this.selectedCellHoverLayer.onLoad(function () {
-                me.selectedCellHoverLayer.setSize(me.cellSize);
-                me.selectedCellHoverLayer.setParent(me.layer);
-            });
-            this.$infoPanel = $(options.$infoPanel);
 
         }
         Map.prototype = {
@@ -116,18 +105,6 @@ define(
                 }
 
             },
-            selectCell:function (cell) {
-                this.selectedCell = cell;
-                if (cell) {
-                    this.selectedCellHoverLayer.show().setOffset(cell.layer.offset);
-                    this.$infoPanel.html('<b>Территория:</b>' + cell.getInfo());
-                } else {
-                    this.$infoPanel.html('');
-                    this.selectedCellHoverLayer.hide();
-                }
-                return this;
-            },
-
             /**
              * @return [Unit]
              */

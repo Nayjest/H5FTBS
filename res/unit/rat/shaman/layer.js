@@ -3,5 +3,6 @@ res = {
     offset:[0,0],
     zIndex:require('utils').rndInt(require('map/Map').zLevels.units),
     image:'/img/units/rat/shaman/t_h60.png',
+    _class:require('layers/ImageLayer')
     //fit:Me.fit.CONTAIN
 }

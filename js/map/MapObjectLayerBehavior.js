@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 define([], function () {
     function MapObjectLayerBehavior(obj, layer) {
         layer.on('click', function () {

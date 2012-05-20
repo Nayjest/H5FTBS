@@ -124,5 +124,5 @@ define(['layers/DomLayer', 'Loadable'], function (DomLayer) {
 
 
 
-    return Me;
+    return DomImageLayer;
 });

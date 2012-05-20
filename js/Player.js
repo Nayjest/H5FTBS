@@ -1,4 +1,4 @@
-define(['map/Map','layers/DomLayer'], function(Map, DomLayer){
+define([], function(){
     var Player = function(config){
         var defaults = {
             controller:Player.controllers.local,
@@ -22,28 +22,8 @@ define(['map/Map','layers/DomLayer'], function(Map, DomLayer){
 
 
 
-    Player.prototype = {                       
+    Player.prototype = {
 
-        getMarker:function(){
-            var cellSize = this.game.map.cellSize;
-            var layerConfig = {
-                tag:'div',
-                size:[4,3],
-                offset:[cellSize[0]/2-10,-cellSize[1]/2+10],
-                css:{
-                    backgroundColor:this.color,
-                    // @todo MAP dosesn't loads. see: console.log('Map:',Map)
-                    zIndex:100,
-                    position:'absolute'
-
-                }
-            }
-            return new DomLayer(layerConfig);
-        },
-        markUnit:function(unit){            
-            //@todo probably unit.layer dont loaded yet
-            this.getMarker().setParent(unit.layer).update();
-        },
         /**
         * @return true if player is enemy
         */

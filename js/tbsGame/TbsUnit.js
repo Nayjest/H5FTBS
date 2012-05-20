@@ -1,4 +1,4 @@
-define(['map/Unit', 'Utils'], function (Unit, Utils) {
+define(['map/Unit', 'utils'], function (Unit, utils) {
 
     var defaults = {
         maxMoves:2,
@@ -14,11 +14,10 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         movementTypes:null
     }
 
-    TbsUnit = function (config) {
-        var self = this;
+    function TbsUnit(config) {
         var options = merge({}, config);
         mergeUndefined(options, defaults);
-        TbsUnit.superClass.call(this, options);
+        Me.superClass.call(this, options);
         //by default unit can walk only
         if (!this.movementTypes) {
             this.movementTypes = [TbsUnit.movementTypes.walk];
@@ -30,42 +29,18 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         if (this.hp === undefined) {
             this.hp = this.maxHp;
         }
-        this._guiLayers = [];
-        this.onLoad(function () {
-            //attack if enemy
-            self.layer.on('click', function () {
-                /** @var Attacker unit */
-                var u = self.map.game.selectedUnit;
-                if (u && u.isMyTurn() && u.canAttack(self) && u.canMoveTo(self.map.selectedCell)) {
-                    u.moveTo(self.map.selectedCell).attack(self);
-                }
-            });
 
-            // @todo Don't works!!
-            //show direction of attack
-            var handler = function () {
-                /** @var TbsUnit u Attacker unit */
-                var u = self.map.game.selectedUnit;
-                if (u && u.isMyTurn() && u.canAttack(self)) {
-                    var attackFromCell = self.mapCell.getClosestNeighborByCursor(u.getCellsCanMove());
-                    if (attackFromCell) {
-                        attackFromCell.select();
-                    } else {
-                        console.log('attackFromCell is empty, errors in business logic!');
-                    }
-                }
-            }
-            self.layer.on('mouseover', handler);
-
-        });
     }
+
     var Me = TbsUnit;
     Me.movementTypes = {
         swim:'swim',
         walk:'walk',
         fly:'fly'
     }
-    Me.inheritsFrom(Unit).extendProto({
+    Me.inheritsFrom(Unit);
+    Me.extendProto({
+        presenterClass:'presenters/TbsUnitPresenter',
         onNewTurn:function () {
             this.moves = this.maxMoves;
             this.canAttackOnThisTurn = true;
@@ -79,25 +54,19 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
             return this.player.isEnemy(unit.player);
         },
         moveTo:function (cell) {
-
             this.moves -= this.mapCell.distanceTo(cell);
-            Me.superProto.moveTo.call(this, cell);
-            if (this.map.game.currentPlayer = this.player) {
-                this.showActions();
-            }
+            this.mapCell = cell;
             return this;
         },
         attack:function (enemyUnit) {
-            console.log(this, 'attacked', enemyUnit);
-
-            var damage = Utils.rndInt(this.damage);
+            var damage = utils.rndInt(this.damage);
             enemyUnit.hp -= damage;
             if (enemyUnit.hp <= 0) {
                 this.kill(enemyUnit);
             }
             this.moves = 0;
             this.canAttackOnThisTurn = false;
-            this._clearMovesHighlight();
+            console.log(this, 'attacked', enemyUnit, 'damage:', damage, 'hp:', enemyUnit.hp);
         },
 
         /**
@@ -106,6 +75,24 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         getCellsCanAttack:function () {
             if (!this.canAttackOnThisTurn) return [];
             return this.mapCell.selectByDistance(this.moves + 1, []);
+        },
+        /**
+         * Get cells that contains enemy units can be attacked by this unit
+         */
+        getAttackTargetCells:function () {
+            var targets = [];
+            var cellsCanAttack = this.getCellsCanAttack();
+            for (var i = cellsCanAttack.length, cell, units; i--;) {
+                cell = cellsCanAttack[i];
+                units = cell.getUnits();
+                for (var j = units.length; j--;) {
+                    if (units[j].isEnemy(this)) {
+                        targets.push(cell);
+                        break;
+                    }
+                }
+            }
+            return targets;
         },
         getCellsCanMove:function (includeCurrentCell) {
             var self = this;
@@ -140,13 +127,9 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         canAttack:function (unit) {
             return this.isEnemy(unit) && this.getCellsCanAttack().indexOf(unit.mapCell) != -1;
         },
-        destroy:function() {
-            if (this.map) {
-                for (var i = this.map.units.length;i--;){
-                    if (this.map.units[i]==this) {
-                        this.map.units.splice(i,1);
-                    }
-                }
+        destroy:function () {
+            if (this.map && this.map.units) {
+                utils.removeFromArray(this, this.map.units);
             }
             Me.superProto.destroy.call(this);
         },
@@ -155,65 +138,9 @@ define(['map/Unit', 'Utils'], function (Unit, Utils) {
         },
         isMyTurn:function () {
             return this.player == this.map.game.currentPlayer;
-        },
-        showActions:function () {
-            TbsUnit.superProto.showActions.call(this);
-            this._highlightMoves();
-            return this;
-        },
-        select:function () {
-            var selectedUnit = this.map.game.selectedUnit;
-            if (selectedUnit && selectedUnit.canAttack(this)) {
-                // Dont select unit when attack
-                return;
-            } else {
-                TbsUnit.superProto.select.call(this);
-            }
-
-        },
-        deselect:function () {
-            this._clearMovesHighlight();
-            TbsUnit.superProto.deselect.call(this);
-        },
-        _clearMovesHighlight:function () {
-
-            for (var i = TbsUnit._movementHighlightLayers.length; i--;) {
-                TbsUnit._movementHighlightLayers[i].destroy();
-            }
-            TbsUnit._movementHighlightLayers = [];
-        },
-        //Highlight map cells that can be reached by this unit in current turn
-        _highlightMoves:function () {
-            var self = this;
-            this._clearMovesHighlight();
-            if (this.moves <= 0) return;
-            var cellsCanMove = this.getCellsCanMove(true);
-            var l, cell, unit;
-            for (var i = cellsCanMove.length; i--;) {
-                cell = cellsCanMove[i];
-                unit = cell.getUnits().pop();
-                if (unit && this.isEnemy(unit)) {
-                    l = cell.createHighlightLayer('red');
-                } else if (!unit || unit === self) {
-                    l = cell.createHighlightLayer('green');
-                    (function (cell) {
-                        l.on('click', function () {
-                            self.moveTo(cell);
-                        });
-                    })(cell);
-                }
-                (function (cell) {
-                    l.on('mouseover', function () {
-                        cell.select();
-                    });
-                })(cell);
-                TbsUnit._movementHighlightLayers.push(l);
-            }
-
-
         }
+
     });
-    TbsUnit._movementHighlightLayers = [];
 
     return TbsUnit;
 

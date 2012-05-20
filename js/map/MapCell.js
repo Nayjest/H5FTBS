@@ -28,8 +28,6 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
         if (this.map) {
             this.map.cells[this.x][this.y] = this;
         }
-        this.layerSrc = this.layer;
-        delete(this.layer);
 //        MapCellLayer.load(this.layer, function (obj) {
 //            obj.on('mouseover', function (e) {
 //                self.map.selectCell(self);
@@ -160,10 +158,6 @@ define(['layers/ImageLayer', 'layers/components/Highlight', 'jquery', 'Utils', '
                 (this.x - this.map.size[0] / 2) * this.map.cellSize[0],
                 (this.y - this.map.size[1] / 2) * this.map.cellSize[1]
             ];
-        },
-        //@deprecated
-        select:function () {
-            this.map.selectCell(this);
         },
         getInfo:function () {
             return '[' + this.x + ',' + this.y + ']<br> ' + MapCell.descriptions[this.type];

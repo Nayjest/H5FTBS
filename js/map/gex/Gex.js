@@ -81,44 +81,6 @@ define(
                 var cell, y;
                 y = this.y + 1 - this.x % 2;
                 if (cell = this.map.cells[this.x - 1][y]) return cell;
-            },
-
-            /**
-             * Creates layer that represents map cell highlight
-             * @param string modification (green,red,etc.)
-             * @return ImageLayer
-             */
-            createHighlightLayer:function (modification) {
-                if (modification) {
-                    modification = '_' + modification;
-                } else {
-                    modification = '';
-                }
-                var layer = new ImageLayer({
-                    image:'/img/cursor/gex' + modification + '.png',
-                    zIndex:Map.zLevels.mapCellHighlight + 1,
-                    offset:this.layer.offset,
-                    size:this.map.cellSize,
-                    parent:this.map.layer
-                });
-                layer.update();
-                return layer;
-            },
-
-            getClosestNeighborByCursor:function (filter) {
-                //console.log(mouse.pos, this.layer.$el.offset());
-                var candidates = filter ? Utils.arrayIntersect(this.nearby(), filter) : this.nearby();
-                var res = candidates.map(
-                    function (cell) {
-                        return {
-                            cell:cell,
-                            dist:Utils.distance(mouse.pos, cell.layer.getCenterScreenPos())
-                        }
-                    }).sort(
-                    function (a, b) {
-                        return b.dist - a.dist;
-                    }).pop();
-                if (res) return res.cell;
             }
 
         });

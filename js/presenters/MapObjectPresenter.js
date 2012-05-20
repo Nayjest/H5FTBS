@@ -1,32 +1,37 @@
 define(
-    ['layers/AbstractLayer', 'jquery', 'map/MapCell'],
-    function (AbstractLayer, $, MapCell) {
+    ['layers/AbstractLayer', 'jquery', 'layers/Layer'],
+    function (AbstractLayer, $, Layer) {
         "use strict";
         function MapObjectPresenter(model, mapPresenter) {
             this.model = model;
+            model.presenter = this;
             this.mapPresenter = mapPresenter;
+            this._createLayer();
             this.ready = $.when(
                 AbstractLayer.create(model.layerSrc).done(function (layer) {
-                    this.layer = layer;
-                    //@todo check do we need this? (setParent)
-                    layer.setParent(mapPresenter.layer);
-                    if (model.cell) {
-                        layer.setOffset(model.cell._calculateLayerOffset());
-                    }
-                    layer._setLayerEventHandlers();
+                    this._onLayerLoaded(layer);
                 }.bind(this))
             );
+            model.on('destroy', function () {
+                this.layer.destroy();
+            }.bind(this));
         }
 
         var Me = MapObjectPresenter;
         MapObjectPresenter.prototype = {
-            _setLayerEventHandlers:function () {
-                var layer = this.layer;
-                layer.on('mouseover', function (e) {
-                    if (this.model.cell) {
-                        this.mapPresenter.focusOnCell(this.mapPresenter.getCellPresenter(this.model.cell));
-                    }
-                }.bind(this));
+            _createLayer:function () {
+                this.layer = new Layer()
+                    .setParent(this.mapPresenter.layer)
+                    .setOffset(this.model.mapCell._calculateLayerOffset());
+            },
+            _onLayerLoaded:function (layer) {
+                layer.setParent(this.layer);
+                //var layer = this.layer;
+//                layer.on('mouseover', function (e) {
+//                    if (this.model.mapCell) {
+//                        this.mapPresenter.focusOnCell(this.mapPresenter.getCellPresenter(this.model.cell));
+//                    }
+//                }.bind(this));
                 layer.on('click', function (e) {
                     this.mapPresenter.selectObject(this);
                 }.bind(this));

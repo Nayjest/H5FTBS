@@ -9,14 +9,18 @@ define(['Node', 'Class'], function (Node, OOP) {
         w:100,
         h:100
     };
-    var Me = function (config) {
-        if (config) merge(this, config);
+    function AbstractLayer (config) {
+        if (config) {
+            merge(this, config);
+        } else {
+            config = {};
+        }
         this.offset = config.offset?config.offset:[defaults.x,defaults.y];
         this.size = config.size?config.size:[defaults.w,defaults.h];
         this.setZIndex(config.zIndex ? config.zIndex : 1);
         Node.call(this, config.parent, config.children);
     }
-
+    var Me = AbstractLayer;
     Me.extendProto(Node.prototype, {
         /* defaults */
         angle:0,
@@ -98,7 +102,8 @@ define(['Node', 'Class'], function (Node, OOP) {
                 (Math.abs(this.offset[1]) > maxY) ? Math.abs(this.offset[1]) * maxY / this.offset[1] : this.offset[1]]
             //@todo: scale on rotation
             return this;
-        }
+        },
+        stopEvent:function(){}
     });
 
     return Me;

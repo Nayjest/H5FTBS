@@ -1,6 +1,6 @@
 define(
-    ['layers/AbstractLayer', 'layers/DomLayer' , 'jquery', 'presenters/MapCellHighlight', 'Class', 'presenters/MapCellPresenter', 'presenters/MapObjectPresenter'],
-    function (AbstractLayer, DomLayer, $, MapCellHighlight, OOP, MapCellPresenter, MapObjectPresenter) {
+    ['layers/AbstractLayer', 'layers/DomLayer' , 'jquery', 'presenters/MapCellHighlight', 'Class', 'presenters/MapCellPresenter', 'presenters/MapObjectPresenter', 'presenters/UnitPresenter', 'presenters/TbsUnitPresenter'],
+    function (AbstractLayer, DomLayer, $, MapCellHighlight, OOP, MapCellPresenter) {
         "use strict";
 
         /**
@@ -11,11 +11,13 @@ define(
          * @param {Object} options
          */
         function MapPresenter(map, options) {
-            if (options) OOP.merge(this, options);
-            if (this.$infoPanel) this.setInfoPanel(this.$infoPanel);
-            else if (this.infoPanelSelector) this.setInfoPanel(this.infoPanelSelector);
+            if (!options) options = {};
+            OOP.merge(this, options);
+            if (options.$infoPanel) this.setInfoPanel(options.$infoPanel);
+            else if (options.infoPanelSelector) this.setInfoPanel(options.infoPanelSelector);
             this.map = map;
             this.focusedCell = null;
+
             this.ready = $.when(
                 this._createMapLayer(),
                 this._createFocusedCellHighlight(),
@@ -58,12 +60,13 @@ define(
             _createMapLayer:function () {
                 // @todo move layer config to this.mapLayerSrc and set size later
                 var map = this.map;
-                return this.layer = DomLayer({
+                return this.layer = new DomLayer({
                     size:[map.size[0] * map.cellSize[0], map.size[1] * map.cellSize[1]],
                     css:{
-                        marginTop:this.size[1] * this.cellSize[1] + 105
+                        marginTop:map.size[1] * map.cellSize[1] + 105
                         //outline:'1px solid red'
-                    }
+                    },
+                    attr:{'class':'map-layer'}
                 });
             },
             _createCellPresenters:function () {
@@ -80,7 +83,8 @@ define(
                 this.objPresenters = [];
                 var when = [];
                 this.map.objects.forEach(function (obj) {
-                    var objPresenter = new MapObjectPresenter(obj, this);
+                    var _class = require(obj.presenterClass);
+                    var objPresenter = new _class(obj, this);
                     this.objPresenters.push(objPresenter);
                     when.push(objPresenter.ready);
                 }, this);
@@ -90,6 +94,7 @@ define(
              * Gets cell presenter by MapCell object
              * @param {MapCell} cell
              * @return {MapCellPresenter}
+             * @deprecated (I decided to save link to presenter object inside cell )
              */
             getCellPresenter:function (cell) {
                 for (var i = this.cellPresenters.length; i--;) {
@@ -106,6 +111,9 @@ define(
             _createFocusedCellHighlight:function () {
                 if (this.layersSrc.focusedCell) {
                     this.focusedCellHighlight = new MapCellHighlight(this.layersSrc.focusedCell);
+                    this.focusedCellHighlight.ready.done(function(highlight){
+                        highlight.layer.setSize(this.map.cellSize);
+                    }.bind(this));
                     return this.focusedCellHighlight.ready;
                 } else {
                     return false;
@@ -116,11 +124,11 @@ define(
              * @param {MapCellPresenter|null} cellPresenter
              * @return {MapPresenter}
              */
-            focusOnCell:function (cellPresenter) {
-                if (cellPresenter && cellPresenter !== this.focusedCell) {
-                    this.focusedCell = cellPresenter;
-                    if (this.focusedCellHighlight) this.focusedCellHighlight.setCell(cellPresenter).show();
-                    this.$infoPanel.html('<b>Территория:</b>' + cellPresenter.cell.getInfo());
+            focusOnCell:function (cell) {
+                if (cell && cell !== this.focusedCell) {
+                    this.focusedCell = cell;
+                    if (this.focusedCellHighlight) this.focusedCellHighlight.setCell(cell).show();
+                    this.$infoPanel.html('<b>Территория:</b>' + cell.getInfo());
                 } else {
                     this.clearCellFocus();
                 }

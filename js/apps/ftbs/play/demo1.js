@@ -1,7 +1,6 @@
 define(
-    ['map/Map','widgets/window/WindowWidget','widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'apps/ftbs/play/src/bootstrap'],
-    function (Map, WindowWidget,Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $) {
-        console.log('MAP!!:',Map);
+    ['map/Map', 'widgets/window/WindowWidget', 'widgets/sidebar/Sidebar', 'map/MapGenerator', 'TurnBasedGame', 'map/gex/Gex', 'Player', 'tbsGame/TbsUnit', 'map/MapObject', 'mouse', 'jquery', 'apps/ftbs/play/src/bootstrap', 'presenters/TbsGamePresenter', 'presenters/GexMapPresenter','layers/ImageLayer'],
+    function (Map, WindowWidget, Sidebar, MapGenerator, TurnBasedGame, Gex, Player, TbsUnit, MapObject, mouse, $, bootstrap, TbsGamePresenter, GexMapPresenter, ImageLayer) {
         return function () {
             p1 = new Player;
             p2 = new Player;
@@ -9,15 +8,7 @@ define(
             map = MapGenerator.create({size:[15, 6], cellSize:[74, 64]}).fill(Gex.generators.grass).map;
             game = new TurnBasedGame({
                 map:map,
-                players:[p1,p2]
-            });
-
-
-            sbar = new Sidebar({
-                onReady:function () {
-                    window.map.$infoPanel = $('#mapInfo');
-                },
-                game:game
+                players:[p1, p2]
             });
 
 
@@ -39,22 +30,30 @@ define(
 
             stone = new MapObject({
                 passable:false,
-                layer:{
+                layerSrc:{
                     image:'/res/map/terrain/stone/img/5_blue_spiral.png',
                     size:[50, 50],
-                    zIndex:999
+                    zIndex:999,
+                    _class:ImageLayer
                 }
             }).placeTo(map, 3, 1);
 
             u3 = new TbsUnit({
                 moves:4,
                 maxMoves:4,
-                layer:{
+                layerSrc:{
                     image:'/img/units/Elvish_archer/ea1.png',
                     size:[52, 80],
-                    zIndex:600
+                    zIndex:600,
+                    _class:ImageLayer
                 }
             }).placeTo(map, 7, 2).setPlayer(p2);
+
+            sbar = new Sidebar({game:game});
+            sbar.htmlReady.done(function () {
+                new TbsGamePresenter(game);
+                window.mapPresenter = new GexMapPresenter(map, {$infoPanel:$('#mapInfo')});
+            });
 
             //    var unit2 = new DomLayer({
             //        size:[63,78],

@@ -3,7 +3,7 @@ define(['widgets/TplWidget', 'decorator', 'jquery'], function (TplWidget, decora
     var Sidebar = function (config) {
         Me.superClass.call(this, config);
         this.game = config.game;
-        decorator.decorateAfter(game, 'setCurrentPlayer', this.updatePlayerInfo.bind(this));
+        decorator.decorateAfter(this.game, 'setCurrentPlayer', this.updatePlayerInfo.bind(this));
         this.htmlReady.done(function(){
             this.$playerInfo = $('#playerInfo');
             this.game.ready.done(function(){

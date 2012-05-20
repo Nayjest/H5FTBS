@@ -1,4 +1,4 @@
-define(['Game','Class'],function(Game){
+define(['Game','Class'],function(Game, OOP){
 
     
     TurnBasedGame = function(config){
@@ -23,11 +23,10 @@ define(['Game','Class'],function(Game){
                 i++;
                 this.setCurrentPlayer(this.players[i]);
             }
-
         },
         nextUnit:function(){
             var player = this.currentPlayer;
-            var unit = this.selectedUnit;
+            var unit = this.currentUnit;
             if (!unit || (unit.player != player)) {
                 unit = player.units[0];                
             } else {
@@ -43,8 +42,7 @@ define(['Game','Class'],function(Game){
                 }
                 
             }
-            unit.select(player);
-            this.selectedUnit = unit;
+            this.setCurrentUnit(unit);
         },
         newTurn:function(){
             this.turn++;
@@ -57,11 +55,14 @@ define(['Game','Class'],function(Game){
         setCurrentPlayer:function(player){
             this.currentPlayer = player;
             //this.$currentPlayer.html(player.name);
-            if (this.selectedUnit) this.selectedUnit.deselect();
+            this.nextUnit();
             if (player.units.length) {
-                player.units[0].select();
+                //player.units[0].select();
             }
               
+        },
+        setCurrentUnit:function(unit){
+            this.currentUnit = unit;
         }
     });  
     

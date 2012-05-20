@@ -8,6 +8,8 @@ define(['widgets/TplWidget', 'decorator', 'jquery'], function (TplWidget, decora
             this.$playerInfo = $('#playerInfo');
             this.game.ready.done(function(){
                 this.updatePlayerInfo();
+                $('.btnNextTurn').click(this.game.nextTurn.bind(this.game));
+                $('.btnNextUnit').click(this.game.nextUnit.bind(this.game));
             }.bind(this));
         }.bind(this));
     }

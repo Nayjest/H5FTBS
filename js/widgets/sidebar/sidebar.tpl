@@ -11,7 +11,7 @@
 
                 </span>
     </div>
-    <input type="button" value="Закончить ход" onclick="game.nextTurn();"><br>
-    <input type="button" value="След. юнит" onclick="game.nextUnit();">
+    <input type="button" class="btnNextTurn" value="Закончить ход"/><br>
+    <input type="button" class="btnNextUnit" value="След. юнит"/>
 
 </div>

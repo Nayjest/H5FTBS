@@ -56,7 +56,7 @@ define(
                     layer.setCanvas(_canvas);
                 }
                 if (this.model.map) {
-                    layer.offset[1] = ~~(layer.offset[1] - (layer.size[1] - self.map.cellSize[1]) / 2 - self.map.cellSize[1] / 4);
+                    layer.offset[1] = ~~(layer.offset[1] - (layer.size[1] - this.model.map.cellSize[1]) / 2 - this.model.map.cellSize[1] / 4);
                 }
 //                this.layer = new NonDomLayer({
 //                    canvas:_canvas,

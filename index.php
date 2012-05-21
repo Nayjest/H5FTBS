@@ -24,7 +24,8 @@
             baseUrl:'/js',
             paths:{
                 'jquery':'lib/jquery/jquery-1.7.1.min',
-                'jquery.tmpl':'lib/jquery-tmpl/jquery.tmpl.min'
+                'jquery.tmpl':'lib/jquery-tmpl/jquery.tmpl.min',
+                'davis':'lib/davis/davis.min'
             },
             //only for dev mode to disable browser caching. if you need to add breakpoints in Chrome debug, disable it
             // @todo This makes js files unreachable in ie developers toolbar
